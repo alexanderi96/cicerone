@@ -1,5 +1,3 @@
-Documentazione
-
-Questo progetto è stato avviato seguendo questa guida
+Project started following:
 https://astaxie.gitbooks.io/build-web-application-with-golang/en/
 
