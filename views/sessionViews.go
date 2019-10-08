@@ -33,14 +33,16 @@ func LogoutFunc(w http.ResponseWriter, r *http.Request) {
 
 //LoginFunc implements the login functionality, will add a cookie to the cookie store for managing authentication
 func LoginFunc(w http.ResponseWriter, r *http.Request) {
-	session, _ := sessions.Store.Get(r, "session")
+	//session, _ := sessions.Store.Get(r, "session")
 
 	switch r.Method {
 	case "GET":
+		log.Print("Inside GET")
 		loginTemplate.Execute(w, nil)
 	case "POST":
 		log.Print("Inside POST")
 		r.ParseForm()
+		/*
 		username := r.Form.Get("username")
 		password := r.Form.Get("password")
 
@@ -51,8 +53,8 @@ func LoginFunc(w http.ResponseWriter, r *http.Request) {
 			log.Print("user ", username, " is authenticated")
 			http.Redirect(w, r, "/", 302)
 			return
-		}
-		log.Print("Invalid user " + username)
+		}*/
+		log.Print("Maeiq")
 		loginTemplate.Execute(w, nil)
 	default:
 		http.Redirect(w, r, "/login/", http.StatusUnauthorized)
