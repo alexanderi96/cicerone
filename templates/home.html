@@ -1,8 +1,16 @@
 <html>
     <head>
-    <title>You are logged In!</title>
+    
     </head>
     <body>
-        those testicles.
+    	<h1>You are logged In!</h1>
+    	<h2>Hi there {{.Username}}</h2>
+            I've got some information about you, for example:<br>
+            You are {{.Name}} {{.Surname}}, your email is {{.Email}} and well... does {{.Passwd_h}} seems to you a good password?<br><br>
+        <form action="/logout/" method="POST">
+            <input type="submit" value="Logout" />
+        </form>
+
+        {{template "_footer.html"}}
     </body>
 </html>

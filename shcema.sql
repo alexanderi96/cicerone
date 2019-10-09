@@ -9,15 +9,3 @@ CREATE TABLE users (
     last_login timestamp, 
     cicerone boolean
 );
-
-CREATE TABLE tours (
-    tid integer primary key autoincrement,
-    cid primary key references users(uid),
-);
-
-CREATE TABLE files(
-    Title varchar(1000) not null,
-    autoName varchar(255) not null,
-    user_id references users(uid),
-    created_date timestamp
-);

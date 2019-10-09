@@ -9,7 +9,7 @@ import (
 	//"strconv"
 	"strings"
 
-	//"github.com/alexanderi96/cicerone/db"
+	"github.com/alexanderi96/cicerone/db"
 	//"github.com/alexanderi96/cicerone/sessions"
 	//"github.com/alexanderi96/cicerone/utils"
 )
@@ -35,45 +35,41 @@ func PopulateTemplates() {
 		log.Println(err)
 		os.Exit(1)
 	}
-	templates, err := template.ParseFiles(allFiles...) //added := instead of = to make it compile. must figure out
+	templates, err = template.ParseFiles(allFiles...)
 	if err != nil {
 		log.Println(err)
 		os.Exit(1)
 	}
 	homeTemplate = templates.Lookup("home.html")
-	//deletedTemplate = templates.Lookup("deleted.html")
-
-	//editTemplate = templates.Lookup("edit.html")
-	//searchTemplate = templates.Lookup("search.html")
-	//completedTemplate = templates.Lookup("completed.html")
 	loginTemplate = templates.Lookup("login.html")
-	signupTemplate = templates.Lookup("signup.html")
 
 }
 
 func SignUpFunc(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
-		http.Redirect(w, r, "/", http.StatusBadRequest)
+		http.Redirect(w, r, "/login/", http.StatusBadRequest)
 		return
 	}
 	r.ParseForm()
 
+	//must add other elements
 	name := r.Form.Get("name")
 	surname := r.Form.Get("surname")
 	username := r.Form.Get("username")
-	gender := r.Form.Get("gender")
-	birthdate := r.Form.Get("birthdate")
+	//gender := r.Form.Get("gender")
+	//birthdate := r.Form.Get("birthdate")
 	email := r.Form.Get("email")
+	//must hash the passwd
 	password := r.Form.Get("password")
 
-	log.Println(name, surname, username, gender, birthdate, email, password)
+	log.Println(name, surname, username, email, password)
 
-	/*
-	err := db.CreateUser(username, password, email)
+	
+	err := db.CreateUser(name, surname, username, password, email)
 	if err != nil {
 		http.Error(w, "Unable to sign user up", http.StatusInternalServerError)
 	} else {
 		http.Redirect(w, r, "/login/", 302)
 	}
-	*/
+	
 }
