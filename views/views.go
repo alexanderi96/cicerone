@@ -31,7 +31,7 @@ func HomePageFunc(w http.ResponseWriter, r *http.Request) {
 
 		
 		if err != nil {
-			http.Redirect(w, r, "/", http.StatusInternalServerError)
+			http.Redirect(	w, r, "/", http.StatusInternalServerError)
 		} else {
 			//context.CSRFToken = "abcd" I need that to utilize cookies 
 			//expiration := time.Now().Add(365 * 24 * time.Hour)

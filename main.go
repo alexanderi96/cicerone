@@ -14,18 +14,18 @@ import (
 func main(){
 
 	values, err := config.ReadConfig("config.json")
-	var port *string
+	var port string
 
 	if err != nil {
-		port = flag.String("Port", "", "Ip address")
+		flag.StringVar(&port, "Port", "", "Ip address")
 		flag.Parse()
 
-		if !strings.HasPrefix(*port, ":") {
-			*port = ":" + *port
-			log.Println("Port is: " + *port)
+		if !strings.HasPrefix(port, ":") {
+			port = ":" + port
+			log.Println("Port is: " + port)
 		}
 
-		values.ServerPort = *port
+		values.ServerPort = port
 	}
 
 	views.PopulateTemplates()
