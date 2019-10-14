@@ -2,27 +2,13 @@
 <html lang="en">
 
 <head>
-
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!--Bootstrap CDN link -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
-    <title> Welcome to Cicerone, login or sign up</title>
+    {{template "_bootstrap.html"}}
 </head>
 
 <body>
-    <nav class="navbar navbar-default navbar-fixed-top mainHeader">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <p class="navbar-brand" href="/">Cicerone</p>
-            </div>
-        </div>
-    </nav>
+    {{template "_navbar.html"}}
 
-    <div class="timeline">
+    <div class="container">
         <div class="note">
             <p class="noteHeading ">Login </p>
             <div class="form-group">
