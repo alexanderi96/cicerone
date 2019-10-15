@@ -1,23 +1,119 @@
-<div class="navbar">
-  <div class="navbar-inner">
-    <div class="container">
- 		
- 		<!-- Be sure to leave the brand out there if you want it shown -->
- 		<a class="brand" href="/">Cicerone</a>
-		
-		<!-- .btn-navbar is used as the toggle for collapsed navbar content -->
-		<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-		  <span class="icon-bar">asd</span>
-		  <span class="icon-bar">asdasd</span>
-		  <span class="icon-bar">www</span>
-		</a>
- 		
-     
-      <!-- Everything you want hidden at 940px or less, place within here -->
-      <div class="nav-collapse collapse">
-        <!-- .nav, .navbar-search, .navbar-form, etc -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap syle links. must stay in the head -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <title>Cicerone</title>
+</head>
+
+<body>
+  <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="/">Cicerone</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbar">
+      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Link</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+        </li>
+      </ul>
+      <!-- SEARCH BAR
+      <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form>
+      -->
+      <div class="my-2 my-lg-0">
+        <button type="button" class="btn btn-outline-light" data-toggle="modal" data-target="#loginModal">Signin</button>
+        <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#signupModal">Signup</button>  
       </div>
- 
+      
+
+    </div>
+  </nav>
+
+  <!-- Modal login -->
+  <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Signin</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="/login/" method="POST">
+            <div class="loginModal">
+              <label for="uname">Username</label>
+              <input type="text" name="username" class="form-control" id="uname" placeholder="Enter username">
+            </div>
+            <div class="loginModal">
+              <label for="passwd">Password</label>
+              <input type="password" name="password" class="form-control" id="passwd" placeholder="Password">
+            </div>
+            <div class="modal-footer">
+              <input type="submit" value="Signin" class="btn btn-outline-primary" />
+            </div>
+          </form>
+        </div>
+        
+      </div>
     </div>
   </div>
-</div>
+
+  <!-- Modal signup -->
+  <div class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Signup</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="/signup/" method="POST">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" name="name" class="form-control" id="name" placeholder="name">
+            </div>
+            <div class="form-group">
+              <label for="surname">Surname</label>
+              <input type="text" name="surname" class="form-control" id="surname" placeholder="surname">
+            </div>
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input type="text" name="username"class="form-control" id="username" placeholder="username">
+            </div>
+            <div class="form-group">
+              <label for="emial">Email</label>
+              <input type="text" name="email"class="form-control" id="email" placeholder="example@example.com">
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" name="password"class="form-control" id="password" placeholder="password">
+            </div>
+            <div class="modal-footer">
+              <input type="submit" value="Signup" class="btn btn-outline-primary" />
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>

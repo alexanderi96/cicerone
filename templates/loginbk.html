@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {{template "_bootstrap.html"}}
+</head>
+
+<body>
+    <div class="jumbotron" style="margin-bottom: 0px">
+        <h1>Cicerone</h1>
+        <p>Travel togeter!</p>
+        
+    </div>
+    {{template "_navbar.html"}}
+
+    <div class="container">
+        <div class="note">
+            <p class="noteHeading ">Login </p>
+            <div class="form-group">
+                <form action="/login/" method="POST">
+                    <input type="text" name="username" class="loginbutton" placeholder="Username" />
+                    <input type="password" name="password" class="loginbutton" placeholder="Password" />
+                    <input type="submit" value="Login" class="btn btn-primary" />
+                </form>
+            </div>
+        </div>
+
+        <div class="note">
+            <p class="noteHeading ">Sign up </p>
+            <div class="form-group">
+                <form action="/signup/" method="POST">
+                    <input type="text" name="name" class="loginbutton" placeholder="Name" />
+                    <input type="text" name="surname" calss="loginbutton" placeholder="Surname" />
+                    <input type="text" name="username" class="loginbutton" placeholder="Username" />
+                    <select id="gender" onchange="printValue(this.value)">
+                            <option value="default">-
+                            <option value="man">Man
+                            <option value="woman">Woman
+                            <option value="other">Other
+                    </select>
+                    <input type="date" name="birthdate" class="loginbutton" /><br><br>
+                    <input type="email" name="email" class="loginbutton" placeholder="example@example.com" />
+                    <input type="password" name="password" class="loginbutton" placeholder="Password" />
+                    <input type="submit" value="Signup" class="btn btn-primary" />
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{template "_footer.html"}}
+    {{template "_bootjs.html"}}
+
+</body>
+
+</html>
