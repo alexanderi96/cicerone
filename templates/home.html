@@ -1,32 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-    
-    <head>
-        {{template "_bootstrap.html"}}
-    </head>
-    
-    <body data-spy="scroll" data-target=".navbar">
-        {{template "_navbar.html"}}
-        <div class="container-fluid">
-            <div class="row-fluid">
-                <div class="span2">
-                  <!--Sidebar content-->
-                  <form action="/logout/" method="POST">
-                      <input type="submit" value="Logout" />
-                  </form>  
-                  
-                </div>
-                <div class="span10">
-                    <!--Body content-->
-                    <h1>You are logged In!</h1>
-                    <h2>Hi there {{.Username}}</h2>
-                        <p>I've got some information about you, for example:<br>
-                        You are {{.Name}} {{.Surname}}, your email is {{.Email}} and well...<br>
-                        does {{.Passwd_h}} seems to you a good password?</p>
-                    </div>
+{{template "_navbar.html" .}}
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span2">
+          <!--Sidebar content-->
+          <div>
+            <form action="/logout/" method="POST">
+                <input type="submit" value="Logout" />
+            </form>  
+              
+          </div>
+          
+        </div>
+        <div class="span10">
+            <!--Body content-->
+            <div>
+              <h1>You are logged In!</h1>
+              <h2>Hi there {{.Username}}</h2>
+                  <p>I've got some information about you, for example:<br>
+                  You are {{.Name}} {{.Surname}}, your email is {{.Email}} and well...<br>
+                  does {{.Passwd_h}} seems to you a good password?</p>
+                    
             </div>
         </div>
-        {{template "_footer.html"}}
-        {{template "_bootjs.html"}}
-    </body>
-</html>
+    </div>
+</div>
+{{template "_footer.html" .}}
