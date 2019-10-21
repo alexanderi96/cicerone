@@ -37,7 +37,7 @@ func main(){
 
 	http.HandleFunc("/", views.RequiresLogin(views.HomePageFunc)) // User must be logged in to access the homepage. If he isn't he will recieve a page with the project description and the possibility to login or register
 	
-	// listen to the port 80 for any request
+	// listen to the port 8081 for any request
 	log.Println("Running cicerone on ", values.ServerPort)
 	log.Fatal(http.ListenAndServe(values.ServerPort, nil))
 }

@@ -1,27 +1,38 @@
 {{template "_navbar.html" .}}
-<div class="container-fluid">
-    <div class="row-fluid">
-        <div class="span2">
-          <!--Sidebar content-->
-          <div>
-            <form action="/logout/" method="POST">
-                <input type="submit" value="Logout" />
-            </form>  
-              
-          </div>
-          
+
+<div class="d-flex flwx-wrap row mx-3 my-3 justify-content-around align-itemborder border-danger">
+  {{ if .Events}} {{range $key, $value := .Events}}
+    <div class="px-2 py-2 border border-primary">
+      <div class="card" style="width: 18rem;">
+        <img src="https://w.wallhaven.cc/full/49/wallhaven-49r1w1.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">{{$value.title}}</h5>
+          <p class="card-text">{{$value.shortText}}</p>
+          <a href="/event/{{$value.id}}/" class="btn btn-primary">Open event</a>
         </div>
-        <div class="span10">
-            <!--Body content-->
-            <div>
-              <h1>You are logged In!</h1>
-              <h2>Hi there {{.Username}}</h2>
-                  <p>I've got some information about you, for example:<br>
-                  You are {{.Name}} {{.Surname}}, your email is {{.Email}} and well...<br>
-                  does {{.Passwd_h}} seems to you a good password?</p>
-                    
-            </div>
-        </div>
+      </div>  
     </div>
+  {{end}} {{else}}
+    <div class="px-2 py-2 border border-primary justify-content-center">
+      <div class="card">
+        <div class="card-header">
+           Oh ho!
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Oh ho, there are still no events...</h5>
+         {{ if .IsCicerone}}
+            <p class="card-text">There are no events actually, let's create the first one.</p>
+            <a href="/add-event/" class="btn btn-primary">Add Event</a>
+          {{else}}
+            <p class="card-text">There are no events actually.<br>Become a Cicerone to create the first one.</p>
+            <a href="/go-cicerone/" class="btn btn-primary">Become Cicerone</a>
+          {{end}}
+        </div>
+      </div>
+
+    </div>
+    
+  {{end}}
 </div>
+
 {{template "_footer.html" .}}

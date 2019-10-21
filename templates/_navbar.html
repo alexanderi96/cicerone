@@ -22,25 +22,36 @@
     <div class="collapse navbar-collapse" id="navbar">
       <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
         <li class="nav-item active">
-          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+          <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-        </li>
-      </ul>
-      <!-- SEARCH BAR
-      <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-      </form>
-      -->
-      <div class="my-2 my-lg-0">
-        <button type="button" class="btn btn-outline-light" data-toggle="modal" data-target="#loginModal">Signin</button>
-        <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#signupModal">Signup</button>  
-      </div>
+
+        {{ if .Username}}
+
+          <li class="nav-item">
+            <a class="nav-link" href="/logout/">Logout</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+          </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+          <input class="form-control mr-sm-2" type="search" placeholder="Search">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+        {{else}}
+          <li class="nav-item">
+            <a class="nav-link" href="/contacts/">Contacts</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+          </li>
+        </ul>
+
+        <div class="my-2 my-lg-0">
+          <button type="button" class="btn btn-outline-light" data-toggle="modal" data-target="#loginModal">Signin</button>
+          <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#signupModal">Signup</button>  
+        </div>
+        {{end}}   
       
 
     </div>
