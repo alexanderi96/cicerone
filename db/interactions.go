@@ -87,3 +87,5 @@ func gQuery(sql string, args ...interface{}) error {
 	}
 	return err
 }
+
+func GetEvents

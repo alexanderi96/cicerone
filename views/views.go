@@ -4,12 +4,12 @@ package views
 
 import (
 	"html/template"
-	//"log"
+	"log"
 	"net/http"
-	//"time"
+	"time"
 
-	//"github.com/alexanderi96/cicerone/db"
-	//"github.com/alexanderi96/cicerone/sessions"
+	"github.com/alexanderi96/cicerone/db"
+	"github.com/alexanderi96/cicerone/sessions"
 	"github.com/alexanderi96/cicerone/types"
 
 )
@@ -24,21 +24,19 @@ var err error
 //TODO add http404 error
 func HomePageFunc(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
-		//context := types.LoadContext(r)
-		//username := sessions.GetCurrentUserName(r)
-		//log.Println(context.user.Username)
-		//currentUser, err := db.GetUserInfo(username)
-		c, err := types.LoadContext(r)
+		var c types.Context
+		c.Events, err = db.GetEvents()
+		c.User, err = db.GetUserInfo(sessions.GetCurrentUserName(r))
 		err = nil
 		if err != nil {
+			log.Println("Internal server error retriving context")
 			http.Redirect(	w, r, "/", http.StatusInternalServerError)
 		} else {
-			//context.CSRFToken = "abcd" I need that to utilize cookies 
-			//expiration := time.Now().Add(365 * 24 * time.Hour)
-			//cookie := http.Cookie{Name: "csrftoken", Value: "abcd", Expires: expiration}
-			//http.SetCookie(w, &cookie)
+			c.CSRFToken = "abcd" //I need that to utilize cookies. must implement md5 token
+			expiration := time.Now().Add(365 * 24 * time.Hour)
+			cookie := http.Cookie{Name: "csrftoken", Value: "abcd", Expires: expiration}
+			http.SetCookie(w, &cookie)
 			homeTemplate.Execute(w, c)
-			//replace nil with context to load things in the html document. as far as i can see context is of type Event. there we can find a section called contentHTML, maybe used to render contents in the home template
 		}
 	}
 }
