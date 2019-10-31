@@ -1,0 +1,20 @@
+{{template "_navbar.html" .}}
+
+<div>
+	<h1>Hi {{.Utente.Nome}} {{.Utente.Cognome}}</h1>
+	<p>
+		Selected gender: {{.Utente.Sesso}}<br>
+		Birth date: {{.Utente.DataNascita}}<br>
+		Email: {{.Utente.Email}}<br>
+		Password: {{.Utente.Password}}<br> <!-- i don't provide the password -->
+		
+		{{if .IsCicerone}}
+			Tel: {{.Utente.Cicerone.Tel}}<br>
+			Iban: {{.Utente.Cicerone.Iban}}<br>
+			Fcode: {{.Utente.Cicerone.Fcode}}<br>
+		{{end}}
+	</p>
+</div>
+
+
+{{template "_footer.html" .}}

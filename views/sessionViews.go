@@ -4,8 +4,8 @@ import(
 	"log"
 	"net/http"
 
-	"github.com/alexanderi96/cicerone/db"
-	"github.com/alexanderi96/cicerone/sessions"
+	"gitlab.com/alexanderi96/cicerone/db"
+	"gitlab.com/alexanderi96/cicerone/sessions"
 )
 
 //RequiresLogin is a middleware which will be used for each httpHandler to check if there is any active session
@@ -13,6 +13,18 @@ func RequiresLogin(handler func(w http.ResponseWriter, r *http.Request)) func(w 
 	return func(w http.ResponseWriter, r *http.Request) {
 		if !sessions.IsLoggedIn(r) {
 			http.Redirect(w, r, "/login/", 302)
+			return
+		}
+		handler(w, r)
+	}
+}
+
+func RequiresCicerone(handler func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		uid, _ := db.GetUserID(sessions.GetCurrentUser(r))
+		auth, _ := db.IsCicerone(uid)
+		if  !auth {
+			http.Redirect(w, r, "/", 302)
 			return
 		}
 		handler(w, r)
@@ -42,18 +54,18 @@ func LoginFunc(w http.ResponseWriter, r *http.Request) {
 	case "POST":
 		log.Print("Inside POST")
 		r.ParseForm()
-		username := r.Form.Get("username")
+		email := r.Form.Get("email")
 		password := r.Form.Get("password")
 
-		if (username != "" && password != "") && db.ValidUser(username, password) {
+		if (email != "" && password != "") && db.ValidUser(email, password) {
 			session.Values["loggedin"] = "true"
-			session.Values["username"] = username
+			session.Values["email"] = email
 			session.Save(r, w)
-			log.Print("user ", username, " is authenticated")
+			log.Print("user ", email, " is authenticated")
 			http.Redirect(w, r, "/", 302)
 			return
 		}
-		log.Print("Invalid user " + username)
+		log.Print("Invalid user " + email)
 		loginTemplate.Execute(w, nil)
 	default:
 		http.Redirect(w, r, "/login/", http.StatusUnauthorized)

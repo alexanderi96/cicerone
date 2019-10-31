@@ -1,11 +1,83 @@
-CREATE TABLE users (
-    uid integer primary key autoincrement,
-    name varchar(30),
-    surname varchar(30),
-    username varchar(30),
-    email varchar(50),
-    passwd_h varchar(50),
-    reg_date timestamp,
-    last_login timestamp, 
-    cicerone boolean
+CREATE TABLE Utente(
+	IdUtente INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	Nome CHAR(25) NOT NULL,
+	Cognome CHAR(25) NOT NULL,
+	Sesso INTEGER NOT NULL,
+	DataNascita date NOT NULL,
+	Email CHAR(50) NOT NULL,
+	Password VARCHAR(15) NOT NULL,
+	IsCicerone BOOLEAN
+);
+
+CREATE TABLE Cicerone(
+	IdCicerone PRIMARY KEY REFERENCES Utente(IdUtente),
+	Fcode CHAR(16) NOT NULL,
+	Telefono INTEGER NOT NULL,
+	Iban CHAR(27) NOT NULL
+);
+
+CREATE TABLE Regione(
+	IdRegione INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	NomeRegione CHAR(30) NOT NULL
+);
+
+CREATE TABLE Provincia(
+	IdProvincia INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	FkRegioneProvincia INTEGER NOT NULL,
+	NomeProvincia CHAR(25) NOT NULL
+);
+
+CREATE TABLE Citta(
+	IdCitta	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	FkProvinciaCitta REFERENCES Province(IdProvincia),
+	NomeCitta CHAR(25) NOT NULL
+);
+
+
+CREATE TABLE Cap(
+	IdCap INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	NumeroCap INTEGER NOT NULL
+);
+
+CREATE TABLE CapCit(
+	IdCapCit INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	FkCittaCapCit REFERENCES Citta(IdCitta),
+	FKCapCapCit REFERENCES Cap(IdCap),
+	UNIQUE(FkCittaCapCit, FkCapCapCit)
+);
+
+CREATE TABLE Evento(
+	IdEvento INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	FkCiceroneEvento REFERENCES Ciceroni(IdCicerone),
+	FkCittaEvento REFERENCES Citta(IdCitta),
+	DataInizio date NOT NULL,
+	DataFine date NOT NULL,
+	Descrizione TEXT NOT NULL,
+	Itinerario TEXT NOT NULL,
+	MinPart INTEGER NOT NULL,
+	MaxPart INTEGER NOT NULL CHECK(MaxPart>=MinPart),
+	Costo REAL NOT NULL,
+	LuogoRitrovo CHAR(30) NOT NULL,
+	PrenotabileFinoAl date NOT NULL,
+	Categoria CHAR(25) NOT NULL
+);
+
+CREATE TABLE Lingua(
+	IdLingua INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	NomeLingua INTEGER NOT NULL
+);
+
+CREATE TABLE EveLin(
+	IdEveLin INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	FkEventoEveLin REFERENCES Eventi(IdEvento),
+	FkLinguaEveLin REFERENCES Lingue(IdLingua),
+	UNIQUE(FkEventoEveLin, FkLinguaEveLin)
+);
+
+CREATE TABLE Prenotazione(
+	IdPrenotazione INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	FkUtentePrenotazione REFERENCES Utenti(IdUtente),
+	FkEventoPrenotazione REFERENCES Eventi(IdEvento),
+	DataPrenotazione date NOT NULL,
+	FlagAccettazionePrenotazione BOOLEAN NOT NULL
 );

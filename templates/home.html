@@ -6,8 +6,8 @@
       <div class="card" style="width: 18rem;">
         <img src="https://w.wallhaven.cc/full/49/wallhaven-49r1w1.jpg" class="card-img-top" alt="...">
         <div class="card-body">
-          <h5 class="card-title">{{$value.title}}</h5>
-          <p class="card-text">{{$value.shortText}}</p>
+          <h5 class="card-title">{{$value.Titolo}}</h5>
+          <p class="card-text">{{$value.Descrizione}}</p>
           <a href="/event/{{$value.id}}/" class="btn btn-primary">Open event</a>
         </div>
       </div>  
@@ -22,10 +22,10 @@
           <h5 class="card-title">Oh ho, there are still no events...</h5>
          {{ if .IsCicerone}}
             <p class="card-text">There are no events actually, let's create the first one.</p>
-            <a href="/add-event/" class="btn btn-primary">Add Event</a>
-          {{else}}
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#NewEventModal">Add Event</button>
+            {{else}}
             <p class="card-text">There are no events actually.<br>Become a Cicerone to create the first one.</p>
-            <a href="/go-cicerone/" class="btn btn-primary">Become Cicerone</a>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ciceroneModal">Become Cicerone</button>
           {{end}}
         </div>
       </div>
@@ -36,3 +36,78 @@
 </div>
 
 {{template "_footer.html" .}}
+
+<!-- Modal Cicerone -->
+<div class="modal fade" id="ciceroneModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Become Cicerone</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/go-cicerone/" method="POST">
+          <div class="loginModal">
+            <label for="tel">Phone Number</label>
+            <input type="text" name="tel" class="form-control" id="tel" placeholder="Enter phone number">
+          </div>
+          <div class="loginModal">
+            <label for="fCode">Fiscal code</label>
+            <input type="text" name="fcode" class="form-control" id="fcode" placeholder="Fiscal Code">
+          </div>
+          <div class="loginModal">
+            <label for="iban">IBAN</label>
+            <input type="text" name="iban" class="form-control" id="iban" placeholder="IBAN">
+          </div>
+          <div class="modal-footer">
+            <input type="submit" value="Go CIcerone!" class="btn btn-outline-primary" />
+          </div>
+        </form>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<!-- New Event Modal-->
+<div class="modal fade" id="NewEventModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">New Event</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/add-event/" method="POST">
+          <div class="loginModal">
+            <label for="dataIni">Beginn</label>
+            <input type="date" name="dataIni" class="form-control" id="dataIni">
+          </div>
+          <div class="loginModal">
+            <label for="dataFine">End</label>
+            <input type="date" name="dataFine" class="form-control" id="dataFine">
+          </div>
+
+          <!--Must continue-->
+
+          <div class="loginModal">
+            <label for="fCode">Fiscal code</label>
+            <input type="text" name="fcode" class="form-control" id="fcode" placeholder="Fiscal Code">
+          </div>
+          <div class="loginModal">
+            <label for="iban">IBAN</label>
+            <input type="text" name="iban" class="form-control" id="iban" placeholder="IBAN">
+          </div>
+          <div class="modal-footer">
+            <input type="submit" value="Go CIcerone!" class="btn btn-outline-primary" />
+          </div>
+        </form>
+      </div>
+      
+    </div>
+  </div>
+</div>

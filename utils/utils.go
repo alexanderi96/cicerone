@@ -13,3 +13,13 @@ func GetRedirectUrl(referer string) string {
 	}
 	return redirectUrl
 }
+
+
+//maybe one day will implement epoch data storage
+func DateToUnix(date string) int64 {
+
+}
+
+func UnixToDate(unix int64) string {
+	
+} 

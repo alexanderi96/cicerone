@@ -8,34 +8,80 @@ MUST EDIT
 */
 
 //must add json things
-type User struct {
-	Uid			int 	`json:"id"`
-    Name 		string
-    Surname 	string
-    Username 	string
-    Email 		string
-    Passwd_h 	string
-    Reg_date 	int
-    Last_login 	int 
-    Cicerone 	bool
+type Utente struct {
+	IdUtente		int
+    Nome 		string
+    Cognome 	string
+    Sesso 			string
+    DataNascita		string
+    Email 			string
+    Password 		string
+    Cicerone 		*Cicerone
 }
 
-type Event struct {
-
+type Cicerone struct {
+	IdCicerone 	int
+	CodFis		string
+	Tel 		int
+	Iban		string
 }
+
+type Regione struct {
+	IdRegione int
+	NomeRegione	string
+	Province	[]*Provincia //contiene gli id delle province
+}
+
+type Provincia struct {
+	IdProvincia int
+	NomeProvincia string
+	Citta []*Citta 
+}
+
+type Citta struct {
+	IdCitta int
+	NomeCitta string
+	Cap 	[]int
+}
+
+type Evento struct {
+	IdEvento 	int
+	Creatore	*Cicerone
+	Citta 		*Citta
+	DataInizio 	int64
+	DataFine	int64
+	Titolo string
+	Descrizione	string
+	MinPart		int
+	MaxPart		int
+	Costo		int
+	Indirizzo	string
+	DataScadenzaPren int64
+	Categoria	string
+	Lingue		[]*Lingua
+	Prenotazioni []*Prenotazioni
+}
+
+type Eventi []Evento
+
+type Lingua struct {
+	IdLingua int
+	NomeLingua string
+}
+
+type Prenotazioni struct {
+	IdPrenotazione	int
+	Utente 			int
+	DataPrenotazione int64
+	Accettazione	bool
+}
+
 
 //Context is the struct passed to templates
 type Context struct {
-	Events      []Event 	//using
-	User 		 		//using
-	Navigation 	string
-	Search     	string
-	Message    	string
+	Events      *Eventi 	//using
+	Utente 		*Utente 		//using
 	CSRFToken  	string
 	Referer    	string
-}
-
-//method isCicerone
-func (c Context) IsCicerone() bool {
-	return c.User.Cicerone
+	IsCicerone	bool
 }

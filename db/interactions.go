@@ -17,7 +17,7 @@ import (
 
 	_ "github.com/mattn/go-sqlite3" //we want to use sqlite natively
 	//md "github.com/shurcooL/github_flavored_markdown"
-	//"github.com/alexanderi96/cicerone/types"
+	//"gitlab.com/alexanderi96/cicerone/types"
 )
 
 var database Database
@@ -88,4 +88,4 @@ func gQuery(sql string, args ...interface{}) error {
 	return err
 }
 
-func GetEvents
+//func GetEvents
