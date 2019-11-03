@@ -23,7 +23,7 @@ CREATE TABLE Regione(
 
 CREATE TABLE Provincia(
 	IdProvincia INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	FkRegioneProvincia INTEGER NOT NULL,
+	FkRegioneProvincia REFERENCES Regione(IdRegione),
 	NomeProvincia CHAR(25) NOT NULL
 );
 

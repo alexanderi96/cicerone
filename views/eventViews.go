@@ -22,19 +22,19 @@ func AddEvent(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
 	ciceid, _ := db.GetUserID(sessions.GetCurrentUser(r))
-	idcitta := 1
-	dataIni := r.Form.Get("iban")
-	dataFine := r.Form.Get("iban")
-	desc := r.Form.Get("iban")
-	itiner := r.Form.Get("iban")
-	MinPart, _ := strconv.Atoi(r.Form.Get("tel"))
-	MaxPart, _ := strconv.Atoi(r.Form.Get("tel"))
-	costo, _ := strconv.Atoi(r.Form.Get("tel"))
-	ritrovo := r.Form.Get("iban")
-	prenFinoAl := r.Form.Get("iban")
-	Categoria := r.Form.Get("categoria")	
+	dataIni := r.Form.Get("dataIni") //must check
+	dataFine := r.Form.Get("dataFine") //must check
+	desc := r.Form.Get("desc")
+	city, _ := strconv.Atoi(r.Form.Get("city")) //must check
+	itiner := r.Form.Get("itiner")
+	MinPart, _ := strconv.Atoi(r.Form.Get("minP"))
+	MaxPart, _ := strconv.Atoi(r.Form.Get("maxP"))
+	costo, _ := strconv.Atoi(r.Form.Get("cost"))
+	ritrovo := r.Form.Get("meet") //must check
+	prenFinoAl := r.Form.Get("expDate")
+	Categoria := r.Form.Get("category")	
 
-	err := db.CreateEvent(ciceid, idcitta, dataIni, dataFine, desc, itiner, MinPart, MaxPart, costo, ritrovo, prenFinoAl, Categoria)
+	err := db.CreateEvent(ciceid, city, dataIni, dataFine, desc, itiner, MinPart, MaxPart, costo, ritrovo, prenFinoAl, Categoria)
 	if err != nil {
 		http.Error(w, "Unable to add Event", http.StatusInternalServerError)
 	} else {

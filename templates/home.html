@@ -20,7 +20,7 @@
         </div>
         <div class="card-body">
           <h5 class="card-title">Oh ho, there are still no events...</h5>
-         {{ if .IsCicerone}}
+          {{ if .IsCicerone}}
             <p class="card-text">There are no events actually, let's create the first one.</p>
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#NewEventModal">Add Event</button>
             {{else}}
@@ -39,75 +39,10 @@
 
 <!-- Modal Cicerone -->
 <div class="modal fade" id="ciceroneModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Become Cicerone</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form action="/go-cicerone/" method="POST">
-          <div class="loginModal">
-            <label for="tel">Phone Number</label>
-            <input type="text" name="tel" class="form-control" id="tel" placeholder="Enter phone number">
-          </div>
-          <div class="loginModal">
-            <label for="fCode">Fiscal code</label>
-            <input type="text" name="fcode" class="form-control" id="fcode" placeholder="Fiscal Code">
-          </div>
-          <div class="loginModal">
-            <label for="iban">IBAN</label>
-            <input type="text" name="iban" class="form-control" id="iban" placeholder="IBAN">
-          </div>
-          <div class="modal-footer">
-            <input type="submit" value="Go CIcerone!" class="btn btn-outline-primary" />
-          </div>
-        </form>
-      </div>
-      
-    </div>
-  </div>
+  {{template "_bcicerone.html" .}}
 </div>
 
 <!-- New Event Modal-->
 <div class="modal fade" id="NewEventModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">New Event</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form action="/add-event/" method="POST">
-          <div class="loginModal">
-            <label for="dataIni">Beginn</label>
-            <input type="date" name="dataIni" class="form-control" id="dataIni">
-          </div>
-          <div class="loginModal">
-            <label for="dataFine">End</label>
-            <input type="date" name="dataFine" class="form-control" id="dataFine">
-          </div>
-
-          <!--Must continue-->
-
-          <div class="loginModal">
-            <label for="fCode">Fiscal code</label>
-            <input type="text" name="fcode" class="form-control" id="fcode" placeholder="Fiscal Code">
-          </div>
-          <div class="loginModal">
-            <label for="iban">IBAN</label>
-            <input type="text" name="iban" class="form-control" id="iban" placeholder="IBAN">
-          </div>
-          <div class="modal-footer">
-            <input type="submit" value="Go CIcerone!" class="btn btn-outline-primary" />
-          </div>
-        </form>
-      </div>
-      
-    </div>
-  </div>
+  {{template "_nevent.html" .}}
 </div>

@@ -12,6 +12,7 @@ import(
 func RequiresLogin(handler func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if !sessions.IsLoggedIn(r) {
+			log.Print("invalid session")
 			http.Redirect(w, r, "/login/", 302)
 			return
 		}
@@ -45,7 +46,12 @@ func LogoutFunc(w http.ResponseWriter, r *http.Request) {
 
 //LoginFunc implements the login functionality, will add a cookie to the cookie store for managing authentication
 func LoginFunc(w http.ResponseWriter, r *http.Request) {
-	session, _ := sessions.Store.Get(r, "session")
+	session, err := sessions.Store.Get(r, "session")
+
+	if err != nil {
+	    http.Error(w, err.Error(), http.StatusInternalServerError)
+	    return
+	}
 
 	switch r.Method {
 	case "GET":
