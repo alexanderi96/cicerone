@@ -54,7 +54,7 @@ func GetUserID(email string) (int, error) {
 
 func GetUserInfo(email string) (*types.Utente, error) {
 	var user types.Utente
-
+	
 	userSQL := "select IdUtente, Nome, Cognome, Sesso, DataNascita, Email from Utente where Email=?"
 	rows := database.query(userSQL, email)
 

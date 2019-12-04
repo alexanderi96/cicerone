@@ -1,18 +1,7 @@
 {{template "_navbar.html" .}}
 
 <div class="d-flex flwx-wrap row mx-3 my-3 justify-content-around align-itemborder border-danger">
-  {{ if .Events}} {{range $key, $value := .Events}}
-    <div class="px-2 py-2 border border-primary">
-      <div class="card" style="width: 18rem;">
-        <img src="https://w.wallhaven.cc/full/49/wallhaven-49r1w1.jpg" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">{{$value.Titolo}}</h5>
-          <p class="card-text">{{$value.Descrizione}}</p>
-          <a href="/event/{{$value.id}}/" class="btn btn-primary">Open event</a>
-        </div>
-      </div>  
-    </div>
-  {{end}} {{else}}
+  {{ if eq (len .Events) 0 }}
     <div class="px-2 py-2 border border-primary justify-content-center">
       <div class="card">
         <div class="card-header">
@@ -21,8 +10,7 @@
         <div class="card-body">
           <h5 class="card-title">Oh ho, there are still no events...</h5>
           {{ if .IsCicerone}}
-            <p class="card-text">There are no events actually, let's create the first one.</p>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#NewEventModal">Add Event</button>
+            <p class="card-text">There are no events actually, let's create the first one with the + button</p>
             {{else}}
             <p class="card-text">There are no events actually.<br>Become a Cicerone to create the first one.</p>
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ciceroneModal">Become Cicerone</button>
@@ -30,10 +18,34 @@
         </div>
       </div>
 
+    </div>  
+  {{else}}
+   {{range $key, $value := .Events}}
+    <div class="px-2 py-2 border border-primary">
+      <div class="card" style="width: 18rem;">
+        <img src="https://w.wallhaven.cc/full/49/wallhaven-49r1w1.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+          <!--{{$value.Titolo}}-->
+          <h5 class="card-title">{{$value.Titolo}}</h5>
+          <p class="card-text">{{$value.Descrizione}}</p>
+          <a href="/event/{{$value.IdEvento}}/" class="btn btn-primary">Open event</a>
+        </div>
+      </div>  
     </div>
-    
+   {{end}}   
   {{end}}
 </div>
+
+
+
+<div class="fixed-action-btn smooth-scroll" style="bottom: 45px; right: 24px;">
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#NewEventModal">Add Event</button>
+  <a href="/delete/all">Delete every event</a>
+
+            
+        </div>
+
+
 
 {{template "_footer.html" .}}
 

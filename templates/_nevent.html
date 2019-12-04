@@ -8,22 +8,17 @@
     </div>
     <div class="modal-body">
       <form action="/add-event/" method="POST">
-        sos
-        <div class="loginModal">
-          <label for="dataIni">Beginn date</label>
-          <input type="date" id="dataIni" class="form-control">
+        
+        <div class="form-row">
+          <label for="title">Tell me the title of your event</label>
+          <input type="text" name="title" class="form-control" id="title" placeholder="Title">
         </div>
-        sas
-        <div class="loginModal">
-          <label for="dataFine">End date</label>
-          <input type="date" id="dataFine" class="form-control">
+
+        <div class="form-row">
+          <label for="meet">Where will it be?</label>
+          <input type="text" name="meet" class="form-control" id="meet" placeholder="Put the address here">
         </div>
-        sds
-        <div class="form-group">
-          <label for="exampleFormControlTextarea1">Description</label>
-          <textarea class="form-control" id="desc" rows="3"></textarea>
-        </div>
-        zxc
+
         {{if .City}} 
         <div class="dropdown">
           <select id = "city">
@@ -32,40 +27,33 @@
             {{end}}
            </select>            
         </div>
-        {{else}} zxczxc{{end}}
+        {{end}}
+
+        <!-- TODO: add a checkbox to tell if the event will begin and end the same day -->
+        
+        <div class="form-row">
+          
+          <div class="form-group col-md-6">
+            <label for="dataIni">When will the event begin?</label>
+            <input type="date" id="dataIni" class="form-control">
+          </div>
+
+          <div class="form-group col-md-6">
+            <label for="dataFine">End date</label>
+            <input type="date" id="dataFine" class="form-control">
+          </div>
+        
+        </div>
+        
+        <div class="form-row">
+
+        </div>
         
         <div class="form-group">
-          <label for="exampleFormControlTextarea1">Itinerary</label>
-          <textarea class="form-control" id="itiner" rows="3"></textarea>
+          <label for="exampleFormControlTextarea1">Description</label>
+          <textarea class="form-control" id="desc" rows="3"></textarea>
         </div>
-
-
-        <div class="form-group">
-          <label for="minP">Min partecipanti</label>
-          <input type="text" name="minP" class="form-control" id="minP" placeholder="minP">
-        </div>
-
-
-        <div class="form-group">
-          <label for="maxP">Max partecipanti</label>
-          <input type="text" name="maxP" class="form-control" id="maxP" placeholder="maxP">
-        </div>
-
-        <div class="form-group">
-          <label for="cost">Price €</label>
-          <input type="text" name="cost" class="form-control" id="cost" placeholder="0€">
-        </div>
-
-        <div class="form-group">
-          <label for="meet">Meetplace</label>
-          <input type="text" name="meet" class="form-control" id="meet" placeholder="Meet place">
-        </div>
-
-        <div class="loginModal">
-          <label for="expDate">Bookable until</label>
-          <input type="date" id="expDate" class="form-control">
-        </div>
-
+        
         {{if .Category}} 
         <div class="dropdown">
           <select id = "category">
@@ -75,6 +63,38 @@
            </select>            
         </div>
         {{end}}
+        
+        <div class="form-group">
+          <label for="exampleFormControlTextarea1">Itinerary</label>
+          <textarea class="form-control" id="itiner" rows="3"></textarea>
+        </div>
+  
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="minP">Min partecipanti</label>
+            <input type="number" min="1" max="99" name="minP" class="form-control" id="minP" placeholder="minP">
+          </div>
+
+
+          <div class="form-group col-md-6">
+            <label for="maxP">Max partecipanti</label>
+            <input type="number" min="1" max="99" name="maxP" class="form-control" id="maxP" placeholder="maxP">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="cost">Price €</label>
+          <input type="text" name="cost" class="form-control" id="cost" placeholder="0€">
+        </div>
+
+        
+
+        <div class="loginModal">
+          <label for="expDate">How many days before the event must be the booking closed?</label>
+          <input type="date" id="expDate" class="form-control">
+        </div>
+
+        
 
         <div class="modal-footer">
           <input type="submit" value="add-event" class="btn btn-outline-primary"/>

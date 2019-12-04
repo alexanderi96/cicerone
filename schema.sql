@@ -81,3 +81,8 @@ CREATE TABLE Prenotazione(
 	DataPrenotazione date NOT NULL,
 	FlagAccettazionePrenotazione BOOLEAN NOT NULL
 );
+
+CREATE TABLE Categoria(
+	IdCategoria INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	NomeCate CHAR(20) NOT NULL
+);

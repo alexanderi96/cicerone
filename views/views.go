@@ -57,6 +57,7 @@ func MyProfile(w http.ResponseWriter, r *http.Request) {
 
 func loadContext(r *http.Request) (*types.Context, error) {
 	var c types.Context
+
 	c.Utente, err = db.GetUserInfo(sessions.GetCurrentUser(r))
 
 	if err != nil {
@@ -68,7 +69,7 @@ func loadContext(r *http.Request) (*types.Context, error) {
 			log.Println("Error establishing IfCicerone")
 			return nil, err
 		} else {
-			//c.Events, err = db.GetEvents()
+			c.Events, err = db.GetEvents()
 			return &c, nil
 		}
 	}

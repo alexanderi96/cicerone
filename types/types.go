@@ -62,8 +62,6 @@ type Evento struct {
 	Prenotazioni []*Prenotazioni
 }
 
-type Eventi []Evento
-
 type Lingua struct {
 	IdLingua int
 	NomeLingua string
@@ -79,9 +77,16 @@ type Prenotazioni struct {
 
 //Context is the struct passed to templates
 type Context struct {
-	Events      *Eventi 	//using
+	Events      *[]Evento 	//using
 	Utente 		*Utente 		//using
 	CSRFToken  	string
 	Referer    	string
 	IsCicerone	bool
+	City 		*Citta
+	Category 	*Category
+}
+
+type Category struct {
+	IdCat 	int
+	Nome 	string
 }

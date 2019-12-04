@@ -38,7 +38,10 @@ func main(){
 	http.HandleFunc("/", views.RequiresLogin(views.HomePageFunc)) // User must be logged in to access the homepage. If he isn't he will recieve a page with the project description and the possibility to login or register
 	http.HandleFunc("/go-cicerone/", views.RequiresLogin(views.GoCicerone))
 	http.HandleFunc("/myprofile/", views.RequiresLogin(views.MyProfile))
+
 	http.HandleFunc("/add-event/", views.RequiresCicerone(views.AddEvent))
+	http.HandleFunc("/delete/all", views.RequiresCicerone(views.DeleteEventFunction))
+
 	// listen to the port 8081 for any request
 	log.Println("Running cicerone on ", values.ServerPort)
 	log.Fatal(http.ListenAndServe(values.ServerPort, nil))

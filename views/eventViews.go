@@ -24,6 +24,7 @@ func AddEvent(w http.ResponseWriter, r *http.Request) {
 	ciceid, _ := db.GetUserID(sessions.GetCurrentUser(r))
 	dataIni := r.Form.Get("dataIni") //must check
 	dataFine := r.Form.Get("dataFine") //must check
+	//title := r.Form.Get("title")
 	desc := r.Form.Get("desc")
 	city, _ := strconv.Atoi(r.Form.Get("city")) //must check
 	itiner := r.Form.Get("itiner")
@@ -34,7 +35,7 @@ func AddEvent(w http.ResponseWriter, r *http.Request) {
 	prenFinoAl := r.Form.Get("expDate")
 	Categoria := r.Form.Get("category")	
 
-	err := db.CreateEvent(ciceid, city, dataIni, dataFine, desc, itiner, MinPart, MaxPart, costo, ritrovo, prenFinoAl, Categoria)
+	err := db.CreateEvent(ciceid, city, MinPart, MaxPart, costo, dataIni, dataFine, desc, itiner, ritrovo, prenFinoAl, Categoria)
 	if err != nil {
 		http.Error(w, "Unable to add Event", http.StatusInternalServerError)
 	} else {
