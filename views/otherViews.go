@@ -12,7 +12,8 @@ import (
 
 	"gitlab.com/alexanderi96/cicerone/db"
 	"gitlab.com/alexanderi96/cicerone/sessions"
-	//"gitlab.com/alexanderi96/cicerone/utils"
+	"gitlab.com/alexanderi96/cicerone/utils"
+	"gitlab.com/alexanderi96/cicerone/types"
 )
 
 //PopulateTemplates is used to parse all templates present in
@@ -47,6 +48,8 @@ func PopulateTemplates() {
 }
 
 func SignUpFunc(w http.ResponseWriter, r *http.Request) {
+	var u types.Utente
+
 	if r.Method != "POST" {
 		http.Redirect(w, r, "/login/", http.StatusBadRequest)
 		return
@@ -54,18 +57,15 @@ func SignUpFunc(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
 	//must add other elements
-	name := r.Form.Get("name")
-	surname := r.Form.Get("surname")
-	gender := r.Form.Get("gender")
-	birthdate := r.Form.Get("bdate") //stored as YYYY-MM-DD
-	email := r.Form.Get("email")
+	u.Nome = r.Form.Get("name")
+	u.Cognome = r.Form.Get("surname")
+	u.Sesso = r.Form.Get("gender")
+	u.DataNascita = utils.DateToUnix(r.Form.Get("bdate"))
+	u.Email = r.Form.Get("email")
 	//must hash the passwd
-	password := r.Form.Get("password")
-
-	log.Println(name, surname, gender, email, password, birthdate)
-
+	u.Password = r.Form.Get("password")
 	
-	err = db.CreateUser(name, surname, gender, email, password, birthdate)
+	err = db.CreateUser(u)
 	if err != nil {
 		http.Error(w, "Unable to sign user up", http.StatusInternalServerError)
 	} else {

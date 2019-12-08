@@ -7,8 +7,8 @@ import (
 
 //CreateUser will create a new user, take as input the parameters and
 //insert it into database
-func CreateUser(name, surname, gender, email, password, bdate string) error {
-	err := gQuery("insert into Utente(Nome, Cognome, Sesso, DataNascita, Email, Password) values(?,?,?,?,?,?)", name, surname, gender, bdate, email, password)
+func CreateUser(u types.Utente) error {
+	err := gQuery("insert into Utente(Nome, Cognome, Sesso, DataNascita, Email, Password) values(?,?,?,?,?,?)", u.Nome, u.Cognome, u.Sesso, u.DataNascita, u.Email, u.Password)
 	return err
 }
 

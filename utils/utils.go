@@ -1,7 +1,14 @@
 package utils
 
-import "strings"
+import (
+	"strings" 
+	"time"
+	"log"
+)
 
+const (
+	layout = "2006-01-02"
+)
 func GetRedirectUrl(referer string) string {
 	var redirectUrl string
 	url := strings.Split(referer, "/")
@@ -14,12 +21,17 @@ func GetRedirectUrl(referer string) string {
 	return redirectUrl
 }
 
-
-//maybe one day will implement epoch data storage
 func DateToUnix(date string) int64 {
+	t, err := time.Parse(layout, date)
 
+	if err != nil  {
+		log.Println(err)
+	} else {
+		return t.Unix()
+	}
+	return 0
 }
 
 func UnixToDate(unix int64) string {
-	
+	return "sas"
 } 

@@ -7,8 +7,13 @@ import (
 )
 
 
-func CreateEvent(ciceid, idcitta, MinPart, MaxPart, costo int, dataIni, dataFine, desc, itiner, ritrovo, prenFinoAl, Categoria string) error {
-	err := gQuery("insert into Evento (FkCiceroneEvento, FkCittaEvento, DataInizio, DataFine, Descrizione, Itinerario, MinPart, MaxPart, Costo, LuogoRitrovo, PrenotabileFinoAl, Categoria) values(?,?,?,?,?,?,?,?,?,?,?,?)", ciceid, idcitta, dataIni, dataFine, desc, itiner, MinPart, MaxPart, costo, ritrovo, prenFinoAl, Categoria)
+func CreateEvent(e types.Evento) error {
+	log.Println(e)
+	err := gQuery("insert into Evento (FkCiceroneEvento, DataInizio, DataFine, Titolo, Descrizione, Itinerario, MinPart, MaxPart, Costo, LuogoRitrovo, PrenotabileFinoAl, Categoria) values(?,?,?,?,?,?,?,?,?,?,?,?)",
+					e.Creatore, e.DataInizio, e.DataFine, e.Titolo,
+					e.Descrizione, e.Itinerario, e.MinPart,
+					e.MaxPart, e.Costo, e.Indirizzo,
+					e.DataScadenzaPren, e.Categoria)
 	return err
 }
 
@@ -18,19 +23,18 @@ func GetEvents() (*[]types.Evento, error) {
 	var Evento types.Evento
 	var rows *sql.Rows
 
-	basicSQL := "select * from Evento"
+	basicSQL := "select IdEvento, FkCiceroneEvento, DataInizio, DataFine, Titolo, Descrizione, Itinerario, MinPart, MaxPart, Costo, LuogoRitrovo, PrenotabileFinoAl from Evento"
 	rows = database.query(basicSQL)
 
 	defer rows.Close()
 	for rows.Next() {
-		Evento = types.Evento{}
+		Evento = types.Evento {}
 
-		err = rows.Scan(&Evento.IdEvento, &Evento.Creatore, &Evento.Citta, &Evento.DataInizio, &Evento.DataFine, &Evento.Titolo, &Evento.Descrizione, &Evento.MinPart, &Evento.MaxPart, &Evento.Costo, &Evento.Indirizzo, &Evento.DataScadenzaPren, &Evento.Categoria, &Evento.Lingue, &Evento.Prenotazioni)
+		err = rows.Scan(&Evento.IdEvento, &Evento.Creatore, &Evento.DataInizio, &Evento.DataFine, &Evento.Titolo, &Evento.Descrizione, &Evento.Itinerario, &Evento.MinPart, &Evento.MaxPart, &Evento.Costo, &Evento.Indirizzo, &Evento.DataScadenzaPren)
 		Eventi = append(Eventi, Evento)
 
 	}
 
-	log.Println(Eventi)
 
 	return &Eventi, nil
 

@@ -3,7 +3,7 @@ CREATE TABLE Utente(
 	Nome CHAR(25) NOT NULL,
 	Cognome CHAR(25) NOT NULL,
 	Sesso INTEGER NOT NULL,
-	DataNascita date NOT NULL,
+	DataNascita integer NOT NULL,
 	Email CHAR(50) NOT NULL,
 	Password VARCHAR(15) NOT NULL,
 	IsCicerone BOOLEAN
@@ -50,15 +50,16 @@ CREATE TABLE Evento(
 	IdEvento INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	FkCiceroneEvento REFERENCES Ciceroni(IdCicerone),
 	FkCittaEvento REFERENCES Citta(IdCitta),
-	DataInizio date NOT NULL,
-	DataFine date NOT NULL,
+	DataInizio integer NOT NULL,
+	DataFine integer NOT NULL,
+	Titolo char(30) NOT null,
 	Descrizione TEXT NOT NULL,
 	Itinerario TEXT NOT NULL,
 	MinPart INTEGER NOT NULL,
 	MaxPart INTEGER NOT NULL CHECK(MaxPart>=MinPart),
 	Costo REAL NOT NULL,
 	LuogoRitrovo CHAR(30) NOT NULL,
-	PrenotabileFinoAl date NOT NULL,
+	PrenotabileFinoAl integer NOT NULL,
 	Categoria CHAR(25) NOT NULL
 );
 

@@ -10,10 +10,10 @@ MUST EDIT
 //must add json things
 type Utente struct {
 	IdUtente		int
-    Nome 		string
-    Cognome 	string
+    Nome 			string
+    Cognome 		string
     Sesso 			string
-    DataNascita		string
+    DataNascita		int64
     Email 			string
     Password 		string
     Cicerone 		*Cicerone
@@ -45,21 +45,22 @@ type Citta struct {
 }
 
 type Evento struct {
-	IdEvento 	int
-	Creatore	*Cicerone
-	Citta 		*Citta
-	DataInizio 	int64
-	DataFine	int64
-	Titolo string
-	Descrizione	string
-	MinPart		int
-	MaxPart		int
-	Costo		int
-	Indirizzo	string
-	DataScadenzaPren int64
-	Categoria	string
-	Lingue		[]*Lingua
-	Prenotazioni []*Prenotazioni
+	IdEvento 			int
+	Creatore			int
+	Citta 				int
+	DataInizio 			int64
+	DataFine			int64
+	Titolo 				string
+	Descrizione			string
+	Itinerario 			string
+	MinPart				int
+	MaxPart				int
+	Costo				int
+	Indirizzo			string
+	DataScadenzaPren 	int64
+	Categoria			string
+	Lingue				int
+	Prenotazioni		[]int
 }
 
 type Lingua struct {
