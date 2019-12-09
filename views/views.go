@@ -8,9 +8,9 @@ import (
 	"net/http"
 	"time"
 
-	"gitlab.com/alexanderi96/cicerone/db"
-	"gitlab.com/alexanderi96/cicerone/sessions"
-	"gitlab.com/alexanderi96/cicerone/types"
+	"github.com/alexanderi96/cicerone/db"
+	"github.com/alexanderi96/cicerone/sessions"
+	"github.com/alexanderi96/cicerone/types"
 
 )
 

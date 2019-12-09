@@ -3,7 +3,7 @@ package db
 import (
 	"log"
 	"database/sql" 
-	"gitlab.com/alexanderi96/cicerone/types"
+	"github.com/alexanderi96/cicerone/types"
 )
 
 

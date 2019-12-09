@@ -4,8 +4,8 @@ import(
 	"log"
 	"net/http"
 
-	"gitlab.com/alexanderi96/cicerone/db"
-	"gitlab.com/alexanderi96/cicerone/sessions"
+	"github.com/alexanderi96/cicerone/db"
+	"github.com/alexanderi96/cicerone/sessions"
 )
 
 //RequiresLogin is a middleware which will be used for each httpHandler to check if there is any active session

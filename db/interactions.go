@@ -17,7 +17,7 @@ import (
 
 	_ "github.com/mattn/go-sqlite3" //we want to use sqlite natively
 	//md "github.com/shurcooL/github_flavored_markdown"
-	//"gitlab.com/alexanderi96/cicerone/types"
+	//"github.com/alexanderi96/cicerone/types"
 )
 
 var database Database

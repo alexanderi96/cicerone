@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"gitlab.com/alexanderi96/cicerone/db"
+	"github.com/alexanderi96/cicerone/db"
 )
 
 //MUST USE ONLY TO REFRESH DATABASE'S EVENT TABLE
@@ -13,7 +13,6 @@ func DeleteEventFunction(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusBadRequest)
 		return
 	}
-	log.Println("saaaaaaaaaas")
 
 	id := r.URL.Path[len("/delete/"):]
 	if id == "all" {

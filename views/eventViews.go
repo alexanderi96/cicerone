@@ -10,10 +10,10 @@ import (
 	//"strings"
 	//"time"
 
-	"gitlab.com/alexanderi96/cicerone/db"
-	"gitlab.com/alexanderi96/cicerone/sessions"
-	"gitlab.com/alexanderi96/cicerone/types"
-	"gitlab.com/alexanderi96/cicerone/utils"
+	"github.com/alexanderi96/cicerone/db"
+	"github.com/alexanderi96/cicerone/sessions"
+	"github.com/alexanderi96/cicerone/types"
+	"github.com/alexanderi96/cicerone/utils"
 )
 
 func AddEvent(w http.ResponseWriter, r *http.Request) {

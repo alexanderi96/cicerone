@@ -7,8 +7,8 @@ import (
 	"strings"
 	"log"
 
-	"gitlab.com/alexanderi96/cicerone/config"
-	"gitlab.com/alexanderi96/cicerone/views"
+	"github.com/alexanderi96/cicerone/config"
+	"github.com/alexanderi96/cicerone/views"
 )
 
 func main(){

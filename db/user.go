@@ -2,7 +2,7 @@ package db
 
 import (
 	"log"
-	"gitlab.com/alexanderi96/cicerone/types"
+	"github.com/alexanderi96/cicerone/types"
 )
 
 //CreateUser will create a new user, take as input the parameters and
