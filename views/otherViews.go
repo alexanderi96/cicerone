@@ -95,3 +95,35 @@ func GoCicerone(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", 302)
 	}
 }
+
+func loadContext(r *http.Request, c *types.Context) error {
+	//splitting url in order to understand which context must be loaded.
+	path :=  strings.Split(r.URL.Path, "/")
+
+	switch path[0] {
+	case "myprofile":
+		err := db.GetUserInfo(sessions.GetCurrentUser(r), c.Utente)
+		if err != nil {
+			return err
+		}
+	case "event":
+		//in this case we want to get the information about a single event
+		EId, _ := strconv.Atoi(path[1])
+		err = db.GetEvent(EId, c.Event)
+		if err != nil {
+			return err
+		}
+	default:
+		c.IsCicerone, err = db.IsCicerone(sessions.GetCurrentUser(r))
+		if err != nil {
+			return err
+		}
+		ev := make(chan []types.MiniEvento)
+		go db.GetEvents(ev)
+		if err != nil {
+			return err
+		}
+		c.Events = <- ev
+	}
+	return nil	
+}

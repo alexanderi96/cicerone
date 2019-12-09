@@ -17,27 +17,45 @@ func CreateEvent(e types.Evento) error {
 	return err
 }
 
-func GetEvents() (*[]types.Evento, error) {
+func GetEvents(E chan []types.MiniEvento) {
 	log.Println("Getting events")
-	var Eventi []types.Evento
-	var Evento types.Evento
+	var Eventi []types.MiniEvento
+	var Evento types.MiniEvento
 	var rows *sql.Rows
 
-	basicSQL := "select IdEvento, FkCiceroneEvento, DataInizio, DataFine, Titolo, Descrizione, Itinerario, MinPart, MaxPart, Costo, LuogoRitrovo, PrenotabileFinoAl from Evento"
+	basicSQL := "select IdEvento, Titolo, Descrizione from Evento"
 	rows = database.query(basicSQL)
 
 	defer rows.Close()
 	for rows.Next() {
-		Evento = types.Evento {}
+		Evento = types.MiniEvento {}
+		err = rows.Scan(&Evento.IdEvento, &Evento.Titolo, &Evento.Descrizione)
+		if err != nil {
+			log.Println(err)
+		}
+		Eventi = append(Eventi, Evento)
+	}
+	E <- Eventi
+
+}
+
+func GetEvent(id int, Evento types.Evento) error {
+	log.Println("Getting Event")
+	var rows *sql.Rows
+
+	basicSQL := "select IdEvento, FkCiceroneEvento, DataInizio, DataFine, Titolo, Descrizione, Itinerario, MinPart, MaxPart, Costo, LuogoRitrovo, PrenotabileFinoAl from Evento where IdEvento = ?"
+	rows = database.query(basicSQL, id)
+
+	defer rows.Close()
+	if rows.Next() {
 
 		err = rows.Scan(&Evento.IdEvento, &Evento.Creatore, &Evento.DataInizio, &Evento.DataFine, &Evento.Titolo, &Evento.Descrizione, &Evento.Itinerario, &Evento.MinPart, &Evento.MaxPart, &Evento.Costo, &Evento.Indirizzo, &Evento.DataScadenzaPren)
-		Eventi = append(Eventi, Evento)
-
+		if err != nil {
+			return err
+		}
 	}
 
-
-	return &Eventi, nil
-
+	return nil
 }
 
 func DeleteEveryEvent() error {

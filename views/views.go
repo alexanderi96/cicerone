@@ -7,11 +7,7 @@ import (
 	"log"
 	"net/http"
 	"time"
-
-	"github.com/alexanderi96/cicerone/db"
-	"github.com/alexanderi96/cicerone/sessions"
 	"github.com/alexanderi96/cicerone/types"
-
 )
 
 var templates *template.Template
@@ -23,8 +19,9 @@ var err error
 
 //HomePageFunc is used to handle the "/" URL which is the default page
 func HomePageFunc(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "GET" {		
-		c, err := loadContext(r)
+	if r.Method == "GET" {	
+		var c types.Context	
+		err = loadContext(r, &c)
 		if err != nil {
 			log.Println("Internal server error retriving context")
 			http.Redirect(	w, r, "/", http.StatusInternalServerError)
@@ -39,8 +36,10 @@ func HomePageFunc(w http.ResponseWriter, r *http.Request) {
 }
 
 func MyProfile(w http.ResponseWriter, r *http.Request) {
+	
 	if r.Method == "GET" {
-		c, err := loadContext(r)
+		var c types.Context
+		err = loadContext(r, &c)
 		if err != nil {
 			log.Println("Internal server error retriving context")
 			http.Redirect(	w, r, "/", http.StatusInternalServerError)
@@ -54,23 +53,20 @@ func MyProfile(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func loadContext(r *http.Request) (*types.Context, error) {
-	var c types.Context
-
-	c.Utente, err = db.GetUserInfo(sessions.GetCurrentUser(r))
-
-	if err != nil {
-		log.Println("Error retriving user info: ", err)
-		return nil, err
-	} else {
-		c.IsCicerone, err = db.IsCicerone(c.Utente.IdUtente)
+func ShowEvent(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		var c types.Context
+		err = loadContext(r, &c)
 		if err != nil {
-			log.Println("Error establishing IfCicerone")
-			return nil, err
+			log.Println("Internal server error retriving context")
+			http.Redirect(w, r, "/", http.StatusInternalServerError)
 		} else {
-			c.Events, err = db.GetEvents()
-			return &c, nil
+			c.CSRFToken = "abcd" //I need that to utilize cookies. must implement md5 token
+			expiration := time.Now().Add(365 * 24 * time.Hour)
+			cookie := http.Cookie{Name: "csrftoken", Value: "abcd", Expires: expiration}
+			http.SetCookie(w, &cookie)
+			profileTemplate.Execute(w, c)
 		}
 	}
-	
-}  
+
+}

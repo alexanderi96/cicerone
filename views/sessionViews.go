@@ -22,8 +22,7 @@ func RequiresLogin(handler func(w http.ResponseWriter, r *http.Request)) func(w 
 
 func RequiresCicerone(handler func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		uid, _ := db.GetUserID(sessions.GetCurrentUser(r))
-		auth, _ := db.IsCicerone(uid)
+		auth, _ := db.IsCicerone(sessions.GetCurrentUser(r))
 		if  !auth {
 			http.Redirect(w, r, "/", 302)
 			return

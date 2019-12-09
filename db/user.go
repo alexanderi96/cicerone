@@ -52,9 +52,7 @@ func GetUserID(email string) (int, error) {
 	return userID, nil
 }
 
-func GetUserInfo(email string) (*types.Utente, error) {
-	var user types.Utente
-	
+func GetUserInfo(email string, user types.Utente) error {
 	userSQL := "select IdUtente, Nome, Cognome, Sesso, DataNascita, Email from Utente where Email=?"
 	rows := database.query(userSQL, email)
 
@@ -63,12 +61,12 @@ func GetUserInfo(email string) (*types.Utente, error) {
 
 		err := rows.Scan(&user.IdUtente, &user.Nome, &user.Cognome, &user.Sesso, &user.DataNascita, &user.Email)
 		if err != nil {
-			return &user, err
+			return err
 		}
 		user.Cicerone, _ = GetCiceInfo(user.IdUtente)
 
 	}
-	return &user, nil
+	return nil
 }
 
 func GetCiceInfo(uid int) (*types.Cicerone, error) {
@@ -91,9 +89,12 @@ func AddCicerone(uid, tel int, iban, fcode string) error {
 	return err
 }
 
-func IsCicerone(uid int) (bool, error) {
-	cicerone := false
+func IsCicerone(email string) (bool, error) {
 	var uidFromDB int
+	uid, err := GetUserID(email)
+	if err != nil {
+		return false, err
+	}
 	userSQL := "select IdCicerone from Cicerone where IdCicerone=?"
 	rows := database.query(userSQL, uid)
 
@@ -102,10 +103,9 @@ func IsCicerone(uid int) (bool, error) {
 	if rows.Next() {
 		err := rows.Scan(&uidFromDB)
 		if err != nil {
-			return cicerone, err
+			return false, err
 		}
-		cicerone = true
 	}
 
-	return cicerone, nil
+	return true, nil
 }

@@ -18,8 +18,7 @@
           <label for="meet">Where will it be?</label>
           <input type="text" name="meet" class="form-control" id="meet" placeholder="Put the address here">
         </div>
-
-        {{if .City}} 
+        {{ if gt (len .City) 0 }}
         <div class="dropdown">
           <select id = "city">
             {{range $key, $value := .City}}
@@ -28,11 +27,8 @@
            </select>            
         </div>
         {{end}}
-
-        <!-- TODO: add a checkbox to tell if the event will begin and end the same day -->
-        
         <div class="form-row">
-          
+          <!-- TODO: add a checkbox to tell if the event will begin and end the same day -->
           <div class="form-group col-md-6">
             <label for="dataIni">When will the event begin?</label>
             <input type="date" name="dataIni" id="dataIni" class="form-control">
