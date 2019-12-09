@@ -22,7 +22,6 @@ var profileTemplate *template.Template
 var err error
 
 //HomePageFunc is used to handle the "/" URL which is the default page
-//TODO add http404 error
 func HomePageFunc(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {		
 		c, err := loadContext(r)
