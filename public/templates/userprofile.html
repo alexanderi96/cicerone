@@ -6,9 +6,9 @@
 		Selected gender: {{.Utente.Sesso}}<br>
 		Birth date: {{.Utente.DataNascita}}<br>
 		Email: {{.Utente.Email}}<br>
-		Password: {{.Utente.Password}}<br> <!-- i don't provide the password -->
+		Password: {{.Utente.Password}}<br> 
 		
-		{{if .IsCicerone}}
+		{{if .Utente.Cicerone}}
 			Tel: {{.Utente.Cicerone.Tel}}<br>
 			Iban: {{.Utente.Cicerone.Iban}}<br>
 			Fcode: {{.Utente.Cicerone.CodFis}}<br>

@@ -52,36 +52,25 @@ func GetUserID(email string) (int, error) {
 	return userID, nil
 }
 
-func GetUserInfo(email string, user types.Utente) error {
+//TODO: currently I'm unable to determin if an user is cicerone or not. Must fix that
+func GetUserInfo(email string, usr chan types.Utente) {
+	var user types.Utente 
 	userSQL := "select IdUtente, Nome, Cognome, Sesso, DataNascita, Email from Utente where Email=?"
 	rows := database.query(userSQL, email)
 
 	defer rows.Close() //must defer after every database interaction
 	if rows.Next() {
-
-		err := rows.Scan(&user.IdUtente, &user.Nome, &user.Cognome, &user.Sesso, &user.DataNascita, &user.Email)
-		if err != nil {
-			return err
-		}
-		user.Cicerone, _ = GetCiceInfo(user.IdUtente)
-
-	}
-	return nil
-}
-
-func GetCiceInfo(uid int) (*types.Cicerone, error) {
-	var cice types.Cicerone
-
-	userSQL := "select IdCicerone, Telefono, Fcode, Iban from Cicerone where IdCicerone=?"
-	rows := database.query(userSQL, uid)
-	defer rows.Close()
-	if rows.Next() {
-		err := rows.Scan(&cice.IdCicerone, &cice.Tel, &cice.CodFis, &cice.Iban)
-		if err != nil {
-			return &cice, err
+		_ = rows.Scan(&user.IdUtente, &user.Nome, &user.Cognome, &user.Sesso, &user.DataNascita, &user.Email)
+		
+		userSQL = "select IdCicerone, Telefono, Fcode, Iban from Cicerone where IdCicerone=?"
+		rows = database.query(userSQL, user.IdUtente)
+		defer rows.Close()
+		if rows.Next() {
+			_ = rows.Scan(&user.Cicerone.IdCicerone, &user.Cicerone.Tel, &user.Cicerone.CodFis, &user.Cicerone.Iban)	
 		}
 	}
-	return &cice, nil
+	log.Println(user)
+	usr <- user
 }
 
 func AddCicerone(uid, tel int, iban, fcode string) error {

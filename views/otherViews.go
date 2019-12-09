@@ -45,6 +45,7 @@ func PopulateTemplates() {
 	homeTemplate = templates.Lookup("home.html")
 	loginTemplate = templates.Lookup("login.html")
 	profileTemplate = templates.Lookup("userprofile.html")
+	eventTemplate = templates.Lookup("event.html")
 }
 
 func SignUpFunc(w http.ResponseWriter, r *http.Request) {
@@ -96,19 +97,15 @@ func GoCicerone(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func loadContext(r *http.Request, c *types.Context) error {
-	//splitting url in order to understand which context must be loaded.
-	path :=  strings.Split(r.URL.Path, "/")
-
-	switch path[0] {
+func loadContext(r *http.Request, c *types.Context, path []string) error {	
+	switch path[1] {
 	case "myprofile":
-		err := db.GetUserInfo(sessions.GetCurrentUser(r), c.Utente)
-		if err != nil {
-			return err
-		}
+		usr := make(chan types.Utente)
+		go db.GetUserInfo(sessions.GetCurrentUser(r), usr)
+		c.Utente = <- usr
 	case "event":
 		//in this case we want to get the information about a single event
-		EId, _ := strconv.Atoi(path[1])
+		EId, _ := strconv.Atoi(path[2])
 		err = db.GetEvent(EId, c.Event)
 		if err != nil {
 			return err
@@ -120,9 +117,6 @@ func loadContext(r *http.Request, c *types.Context) error {
 		}
 		ev := make(chan []types.MiniEvento)
 		go db.GetEvents(ev)
-		if err != nil {
-			return err
-		}
 		c.Events = <- ev
 	}
 	return nil	

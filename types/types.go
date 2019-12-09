@@ -16,7 +16,7 @@ type Utente struct {
     DataNascita		int64
     Email 			string
     Password 		string
-    Cicerone 		*Cicerone
+    Cicerone 		Cicerone
 }
 
 type Cicerone struct {
