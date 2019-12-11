@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"time"
 	"strings"
-	"github.com/alexanderi96/cicerone/types"
+	"github.com/alexanderi96/cicerone/sessions"
 )
 
 var templates *template.Template
@@ -27,8 +27,8 @@ It must be used only if you have to load the context as well
 func DisplayPage(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		path :=  strings.Split(r.URL.Path, "/")
-		var c types.Context	
-		err = loadContext(r, &c, path)
+		usr := sessions.GetCurrentUser(r)
+		c, err := loadContext(usr, path)
 		if err != nil {
 			log.Println("Internal server error retriving context")
 			http.Redirect(	w, r, "/", http.StatusInternalServerError)

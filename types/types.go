@@ -1,31 +1,5 @@
 package types
 
-/*
-Package types is used to store the context struct which
-is passed while templates are executed.
-
-MUST EDIT
-*/
-
-//must add json things
-type Utente struct {
-	IdUtente		int
-    Nome 			string
-    Cognome 		string
-    Sesso 			string
-    DataNascita		int64
-    Email 			string
-    Password 		string
-    Cicerone 		Cicerone
-}
-
-type Cicerone struct {
-	IdCicerone 	int
-	CodFis		string
-	Tel 		int
-	Iban		string
-}
-
 type Regione struct {
 	IdRegione int
 	NomeRegione	string
@@ -86,7 +60,7 @@ type Prenotazioni struct {
 type Context struct {
 	Events      []MiniEvento 	//using
 	Event 		Evento
-	Utente 		Utente 		//using
+	Utente 		interface{} 		//using
 	CSRFToken  	string
 	Referer    	string
 	IsCicerone	bool

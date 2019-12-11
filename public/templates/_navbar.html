@@ -8,6 +8,20 @@
 
     <!-- Bootstrap syle links. must stay in the head -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    
+    <!--TODO: fix the checkbox to enable or disable cicerone fields-->
+    <script type="text/javascript">
+      $('#cicerone').click(function () {
+        console.log(checked);
+        if this.checked = true {
+          document.getElementById("tel").disabled = true;
+          document.getElementById("tel").hidden = true;
+        } else {
+          document.getElementById("ciceinfo").disabled = false;
+          document.getElementById("ciceinfo").hidden = true;
+        }
+      });
+    </script>
 
     <title>Cicerone</title>
 </head>
@@ -25,7 +39,7 @@
           <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
         </li>
 
-        {{ if .Utente}}
+        {{ if .}}
 
           <li class="nav-item">
             <a class="nav-link" href="/logout/">Logout</a>
@@ -143,6 +157,23 @@
             <div class="form-group">
               <label for="password">Password</label>
               <input type="password" name="password"class="form-control" id="password" placeholder="password">
+            </div>
+            <div class="form-group">
+              <input type="checkbox" name="cicerone" id="cicerone"> I want to be able to create new events as well!
+              <div class="form-group">
+                <div class="form-group">
+                  <label for="tel">Phone Number</label>
+                  <input type="text" name="tel" class="form-control" id="tel" placeholder="Enter phone number">
+                </div>
+                <div class="form-group">
+                  <label for="fCode">Fiscal code</label>
+                  <input type="text" name="fcode" class="form-control" id="fcode" placeholder="Fiscal Code">
+                </div>
+                <div class="form-group">
+                  <label for="iban">IBAN</label>
+                  <input type="text" name="iban" class="form-control" id="iban" placeholder="IBAN">
+                </div>
+              </div>
             </div>
             <div class="modal-footer">
               <input type="submit" value="Signup" class="btn btn-outline-primary" />
