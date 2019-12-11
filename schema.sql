@@ -1,35 +1,36 @@
-CREATE TABLE Utente(
+CREATE TABLE Utenti(
 	IdUtente INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	Nome CHAR(25) NOT NULL,
-	Cognome CHAR(25) NOT NULL,
-	Sesso INTEGER NOT NULL,
-	DataNascita integer NOT NULL,
-	Email CHAR(50) NOT NULL,
-	Password VARCHAR(15) NOT NULL,
+	NomeUtente CHAR(25) NOT NULL,
+	CognomeUtente CHAR(25) NOT NULL,
+	SessoUtente INTEGER NOT NULL,
+	DataNascitaUtente integer NOT NULL,
+	EmailUtente CHAR(50) NOT NULL,
+	PasswordUtente VARCHAR(15) NOT NULL,
 	IsCicerone BOOLEAN
 );
 
-CREATE TABLE Cicerone(
-	IdCicerone PRIMARY KEY REFERENCES Utente(IdUtente),
-	Fcode CHAR(16) NOT NULL,
-	Telefono INTEGER NOT NULL,
-	Iban CHAR(27) NOT NULL
+CREATE TABLE Ciceroni(
+	IdCicerone INTEGER PRIMARY KEY,
+	FkUtenteCicerone INTEGER REFERENCES Utente(IdUtente),
+	CodiceFiscaleCicerone CHAR(16) NOT NULL,
+	TelefonoCicerone INTEGER NOT NULL,
+	IbanCicerone CHAR(27) NOT NULL
 );
 
-CREATE TABLE Regione(
+CREATE TABLE Regioni(
 	IdRegione INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	NomeRegione CHAR(30) NOT NULL
 );
 
-CREATE TABLE Provincia(
+CREATE TABLE Province(
 	IdProvincia INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	FkRegioneProvincia REFERENCES Regione(IdRegione),
+	FkRegioneProvincia INTEGER REFERENCES Regione(IdRegione),
 	NomeProvincia CHAR(25) NOT NULL
 );
 
 CREATE TABLE Citta(
 	IdCitta	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	FkProvinciaCitta REFERENCES Province(IdProvincia),
+	FkProvinciaCitta INTEGER REFERENCES Province(IdProvincia),
 	NomeCitta CHAR(25) NOT NULL
 );
 
@@ -41,57 +42,53 @@ CREATE TABLE Cap(
 
 CREATE TABLE CapCit(
 	IdCapCit INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	FkCittaCapCit REFERENCES Citta(IdCitta),
-	FKCapCapCit REFERENCES Cap(IdCap),
+	FkCittaCapCit INTEGER REFERENCES Citta(IdCitta),
+	FKCapCapCit INTEGER REFERENCES Cap(IdCap),
 	UNIQUE(FkCittaCapCit, FkCapCapCit)
 );
 
-CREATE TABLE Evento(
+CREATE TABLE Eventi(
 	IdEvento INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	FkCiceroneEvento REFERENCES Ciceroni(IdCicerone),
-	FkCittaEvento REFERENCES Citta(IdCitta),
-	DataInizio integer NOT NULL,
-	DataFine integer NOT NULL,
-	Titolo char(30) NOT null,
-	Descrizione TEXT NOT NULL,
-	Itinerario TEXT NOT NULL,
-	MinPart INTEGER NOT NULL,
-	MaxPart INTEGER NOT NULL CHECK(MaxPart>=MinPart),
-	Costo REAL NOT NULL,
-	LuogoRitrovo CHAR(30) NOT NULL,
-	PrenotabileFinoAl integer NOT NULL,
-	Categoria CHAR(25) NOT NULL
+	FkCiceroneEvento INTEGER REFERENCES Ciceroni(IdCicerone),
+	FkCittaEvento INTEGER REFERENCES Citta(IdCitta),
+	DataInizioEvento integer NOT NULL,
+	DataFineEvento integer NOT NULL,
+	OraInizioEvento time NOT NULL,
+	OraFineEvento time NOT NULL,
+	DescrizioneEvento TEXT NOT NULL,
+	ItinerarioEvento TEXT NOT NULL,
+	NumeroMinPart INTEGER NOT NULL,
+	NumeroMaxPart INTEGER NOT NULL CHECK(NumeroMaxPart>=NumeroMinPart),
+	CostoEvento REAL NOT NULL,
+	IndirizzoPartenzaEvento CHAR(30) NOT NULL,
+	DataScadenzaPrenotazione integer NOT NULL,
+	CategoriaEvento CHAR(25) NOT NULL
 );
 
 CREATE TABLE Feedback(
 	IdFeedback INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	FkUtente REFERENCES Utenti(IdUtente),
-	FkEvento REFERENCES Eventi(IdEvento),
-	Commento TEXT NOT NULL,
-	DataCommento INTEGER NOT NULL
+	FkUtenteFeedback INTEGER REFERENCES Utenti(IdUtente),
+	FkEventoFeedback INTEGER REFERENCES Eventi(IdEvento),
+	CommentoFeedback TEXT NOT NULL,
+	DataFeedback INTEGER NOT NULL
 );
 
-CREATE TABLE Lingua(
+CREATE TABLE Lingue(
 	IdLingua INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	NomeLingua INTEGER NOT NULL
+	NomeLingua CHAR(25) NOT NULL
 );
 
 CREATE TABLE EveLin(
 	IdEveLin INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	FkEventoEveLin REFERENCES Eventi(IdEvento),
-	FkLinguaEveLin REFERENCES Lingue(IdLingua),
+	FkEventoEveLin INTEGER REFERENCES Eventi(IdEvento),
+	FkLinguaEveLin INTEGER REFERENCES Lingue(IdLingua),
 	UNIQUE(FkEventoEveLin, FkLinguaEveLin)
 );
 
-CREATE TABLE Prenotazione(
+CREATE TABLE Prenotazioni(
 	IdPrenotazione INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	FkUtentePrenotazione REFERENCES Utenti(IdUtente),
 	FkEventoPrenotazione REFERENCES Eventi(IdEvento),
-	DataPrenotazione date NOT NULL,
+	DataPrenotazione INTEGER NOT NULL,
 	FlagAccettazionePrenotazione BOOLEAN NOT NULL
-);
-
-CREATE TABLE Categoria(
-	IdCategoria INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	NomeCate CHAR(20) NOT NULL
 );
