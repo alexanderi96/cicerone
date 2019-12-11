@@ -8,7 +8,7 @@ import (
 //CreateUser will create a new user, take as input the parameters and
 //insert it into database
 func CreateUser(u types.Utente) error {
-	err := gQuery("insert into Utente(Nome, Cognome, Sesso, DataNascita, Email, Password) values(?,?,?,?,?,?)", u.Nome, u.Cognome, u.Sesso, u.DataNascita, u.Email, u.Password)
+	err := gQuery("insert into Utenti(NomeUtente, CognomeUtente, SessoUtente, DataNascitaUtente, EmailUtente, PasswordUtente) values(?,?,?,?,?,?)", u.Nome, u.Cognome, u.Sesso, u.DataNascita, u.Email, u.Password)
 	return err
 }
 
@@ -16,7 +16,7 @@ func CreateUser(u types.Utente) error {
 //combination is valid
 func ValidUser(email, password string) bool {
 	var passwordFromDB string
-	plainSQL := "select Password from Utente where Email=?"
+	plainSQL := "select PasswordUtente from Utenti where EmailUtente=?"
 	log.Print("validating user ", email)
 	rows := database.query(plainSQL, email)
 
@@ -39,7 +39,7 @@ func ValidUser(email, password string) bool {
 //GetUserID will get the user's ID from the database
 func GetUserID(email string) (int, error) {
 	var userID int
-	userSQL := "select IdUtente from Utente where Email=?"
+	userSQL := "select IdUtente from Utenti where EmailUtente=?"
 	rows := database.query(userSQL, email)
 
 	defer rows.Close()
@@ -55,14 +55,14 @@ func GetUserID(email string) (int, error) {
 //TODO: currently I'm unable to determin if an user is cicerone or not. Must fix that
 func GetUserInfo(email string, usr chan types.Utente) {
 	var user types.Utente 
-	userSQL := "select IdUtente, Nome, Cognome, Sesso, DataNascita, Email from Utente where Email=?"
+	userSQL := "select IdUtente, NomeUtente, CognomeUtente, SessoUtente, DataNascitaUtente, EmailUtente from Utenti where EmailUtente=?"
 	rows := database.query(userSQL, email)
 
 	defer rows.Close() //must defer after every database interaction
 	if rows.Next() {
 		_ = rows.Scan(&user.IdUtente, &user.Nome, &user.Cognome, &user.Sesso, &user.DataNascita, &user.Email)
 		
-		userSQL = "select IdCicerone, Telefono, Fcode, Iban from Cicerone where IdCicerone=?"
+		userSQL = "select IdCicerone, TelefonoCicerone, CodiceFiscaleCicerone, IbanCicerone from Ciceroni where IdCicerone=?"
 		rows = database.query(userSQL, user.IdUtente)
 		defer rows.Close()
 		if rows.Next() {
@@ -74,7 +74,7 @@ func GetUserInfo(email string, usr chan types.Utente) {
 }
 
 func AddCicerone(uid, tel int, iban, fcode string) error {
-	err := gQuery("insert into Cicerone(IdCicerone, Fcode, Telefono, Iban) values (?,?,?,?)", uid, tel, iban, fcode)
+	err := gQuery("insert into Ciceroni(IdCicerone, CodiceFiscaleCicerone, TelefonoCicerone, IbanCicerone) values (?,?,?,?)", uid, tel, iban, fcode)
 	return err
 }
 
@@ -84,7 +84,7 @@ func IsCicerone(email string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	userSQL := "select IdCicerone from Cicerone where IdCicerone=?"
+	userSQL := "select IdCicerone from Ciceroni where IdCicerone=?"
 	rows := database.query(userSQL, uid)
 
 	defer rows.Close()
