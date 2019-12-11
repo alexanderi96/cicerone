@@ -9,9 +9,10 @@
         </div>
         <div class="card-body">
           <h5 class="card-title">Oh ho, there are still no events...</h5>
-          {{ if .IsCicerone}}
-            <p class="card-text">There are no events actually, let's create the first one with the + button</p>
-            {{else}}
+          {{if .Utente.IsCicerone}}
+            <p class="card-text">There are no events actually, let's create the first one with the following button</p>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#NewEventModal">Add Event</button>
+          {{else}}
             <p class="card-text">There are no events actually.<br>Become a Cicerone to create the first one.</p>
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ciceroneModal">Become Cicerone</button>
           {{end}}
@@ -19,6 +20,7 @@
       </div>
 
     </div>  
+  </div>
   {{else}}
    {{range $key, $value := .Events}}
     <div class="px-2 py-2 border border-primary">
@@ -32,18 +34,18 @@
         </div>
       </div>  
     </div>
-   {{end}}   
+   {{end}}
+   </div>
+   <div class="fixed-action-btn smooth-scroll" style="bottom: 45px; right: 24px;">
+     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#NewEventModal">Add Event</button>
+     <button type="button" class="btn btn-primary" href="/delete/all">Delete every event</button>       
+   </div> 
   {{end}}
-</div>
 
 
 
-<div class="fixed-action-btn smooth-scroll" style="bottom: 45px; right: 24px;">
-  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#NewEventModal">Add Event</button>
-  <a href="/delete/all">Delete every event</a>
 
-            
-        </div>
+
 
 
 

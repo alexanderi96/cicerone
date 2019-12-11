@@ -24,7 +24,7 @@ func AddEvent(w http.ResponseWriter, r *http.Request) {
 		return
 	} 
 	r.ParseForm()
-	e.Creatore, _ = db.GetUserID(sessions.GetCurrentUser(r))
+	e.Creatore = db.GetUserID(sessions.GetCurrentUser(r))
 
 	e.DataInizio = utils.DateToUnix(r.Form.Get("dataIni"))
 	e.DataFine = utils.DateToUnix(r.Form.Get("dataFine"))

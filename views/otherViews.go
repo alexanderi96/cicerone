@@ -49,7 +49,6 @@ func PopulateTemplates() {
 }
 
 func SignUpFunc(w http.ResponseWriter, r *http.Request) {
-	var u types.Utente
 
 	if r.Method != "POST" {
 		http.Redirect(w, r, "/login/", http.StatusBadRequest)
@@ -57,22 +56,42 @@ func SignUpFunc(w http.ResponseWriter, r *http.Request) {
 	}
 	r.ParseForm()
 
-	//must add other elements
-	u.Nome = r.Form.Get("name")
-	u.Cognome = r.Form.Get("surname")
-	u.Sesso = r.Form.Get("gender")
-	u.DataNascita = utils.DateToUnix(r.Form.Get("bdate"))
-	u.Email = r.Form.Get("email")
-	//must hash the passwd
-	u.Password = r.Form.Get("password")
+	var u types.User
+
+	if r.Form.Get("cicerone") != "on" {
+		u = types.Globetrotter{
+			-1,
+			r.Form.Get("name"),
+			r.Form.Get("surname"),
+			r.Form.Get("gender"),
+			utils.DateToUnix(r.Form.Get("bdate")),
+			r.Form.Get("email"),
+			r.Form.Get("password")}
+	} else {
+		tel, _ := strconv.Atoi(r.Form.Get("tel"))
+
+		u = types.Cicerone{
+			types.Globetrotter{
+				-1,
+				r.Form.Get("name"),
+				r.Form.Get("surname"),
+				r.Form.Get("gender"),
+				utils.DateToUnix(r.Form.Get("bdate")),
+				r.Form.Get("email"),
+
+				//TODO: must hash the passwd
+				r.Form.Get("password")},
+			r.Form.Get("fcode"),
+			tel,
+			r.Form.Get("iban")}
+	}
 	
-	err = db.CreateUser(u)
+	err := db.CreateUser(u)
 	if err != nil {
 		http.Error(w, "Unable to sign user up", http.StatusInternalServerError)
 	} else {
 		http.Redirect(w, r, "/login/", 302)
 	}
-	
 }
 
 func GoCicerone(w http.ResponseWriter, r *http.Request) {
@@ -87,7 +106,7 @@ func GoCicerone(w http.ResponseWriter, r *http.Request) {
 	iban := r.Form.Get("iban")
 	fcode := r.Form.Get("fcode")
 
-	uid, _ := db.GetUserID(sessions.GetCurrentUser(r))
+	uid := db.GetUserID(sessions.GetCurrentUser(r))
 
 	err := db.AddCicerone(uid, tel, iban, fcode)
 	if err != nil {
@@ -97,27 +116,25 @@ func GoCicerone(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func loadContext(r *http.Request, c *types.Context, path []string) error {	
+func loadContext(usr string, path []string) (c types.Context, err error) {	
+	
+	c.Utente = db.GetUserInfo(usr)
+
 	switch path[1] {
 	case "myprofile":
-		usr := make(chan types.Utente)
-		go db.GetUserInfo(sessions.GetCurrentUser(r), usr)
-		c.Utente = <- usr
+		return
 	case "event":
 		//in this case we want to get the information about a single event
 		EId, _ := strconv.Atoi(path[2])
 		err = db.GetEvent(EId, c.Event)
 		if err != nil {
-			return err
+			return c, err
 		}
 	default:
-		c.IsCicerone, err = db.IsCicerone(sessions.GetCurrentUser(r))
-		if err != nil {
-			return err
-		}
 		ev := make(chan []types.MiniEvento)
 		go db.GetEvents(ev)
 		c.Events = <- ev
 	}
-	return nil	
+	
+	return	
 }

@@ -8,13 +8,19 @@
 		Email: {{.Utente.Email}}<br>
 		Password: {{.Utente.Password}}<br> 
 		
-		{{if .Utente.Cicerone}}
-			Tel: {{.Utente.Cicerone.Tel}}<br>
-			Iban: {{.Utente.Cicerone.Iban}}<br>
-			Fcode: {{.Utente.Cicerone.CodFis}}<br>
+		{{if .Utente.IsCicerone}}
+			Tel: {{.Utente.Tel}}<br>
+			Iban: {{.Utente.Iban}}<br>
+			Fcode: {{.Utente.CodFis}}<br>
+		{{else}}
+			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ciceroneModal">Become Cicerone</button>
 		{{end}}
 	</p>
 </div>
 
-
 {{template "_footer.html" .}}
+
+<!-- Modal Cicerone -->
+<div class="modal fade" id="ciceroneModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  {{template "_bcicerone.html" .}}
+</div>
