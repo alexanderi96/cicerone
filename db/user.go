@@ -37,7 +37,7 @@ func CreateUser(u types.User) error {
 //combination is valid
 func ValidUser(email, password string) bool {
 	var passwordFromDB string
-	plainSQL := "select Password from Utente where Email=?"
+	plainSQL := "select PasswordUtente from Utenti where EmailUtente=?"
 	log.Print("validating user ", email)
 	rows := database.query(plainSQL, email)
 
@@ -60,7 +60,7 @@ func ValidUser(email, password string) bool {
 //GetUserID will get the user's ID from the database
 func GetUserID(email string) int {
 	var userID int
-	userSQL := "select IdUtente from Utente where Email=?"
+	userSQL := "select IdUtente from Utenti where EmailUtente=?"
 	rows := database.query(userSQL, email)
 
 	defer rows.Close()
@@ -110,7 +110,7 @@ func GetUserInfo(email string) (u types.User){
 }
 
 func AddCicerone(uid, tel int, iban, fcode string) error {
-	err := gQuery("insert into Cicerone(IdCicerone, Fcode, Telefono, Iban) values (?,?,?,?)", uid, tel, iban, fcode)
+	err := gQuery("insert into Ciceroni(IdCicerone, CodiceFiscaleCicerone, TelefonoCicerone, IbanCicerone) values (?,?,?,?)", uid, tel, iban, fcode)
 	return err
 }
 
@@ -121,7 +121,7 @@ func IsCicerone(email string) (false bool) {
 		log.Println("Unable to determin user Id")
 		return
 	}
-	userSQL := "select IdCicerone from Cicerone where IdCicerone=?"
+	userSQL := "select IdCicerone from Ciceroni where IdCicerone=?"
 	rows := database.query(userSQL, uid)
 
 	defer rows.Close()

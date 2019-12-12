@@ -19,7 +19,7 @@ func GetEvents() (E []types.MiniEvento, e error) {
 	var Evento types.MiniEvento
 	var rows *sql.Rows
 
-	basicSQL := "select IdEvento, Titolo, Descrizione from Evento"
+	basicSQL := "select IdEvento, TitoloEvento, DescrizioneEvento from Eventi"
 	rows = database.query(basicSQL)
 
 	defer rows.Close()
@@ -39,7 +39,7 @@ func GetEventById(id int) (Evento types.Evento, e error) {
 	log.Println("Getting Event")
 	var rows *sql.Rows
 
-	basicSQL := "select IdEvento, FkCiceroneEvento, DataInizio, DataFine, Titolo, Descrizione, Itinerario, MinPart, MaxPart, Costo, LuogoRitrovo, PrenotabileFinoAl from Evento where IdEvento = ?"
+	basicSQL := "select IdEvento, FkCiceroneEvento, DataInizioEvento, DataFineEvento, TitoloEvento, DescrizioneEvento, ItinerarioEvento, NumeroMinPart, NumeroMaxPart, CostoEvento, IndirizzoPartenzaEvento, DataScadenzaPrenotazione from Eventi where IdEvento = ?"
 	rows = database.query(basicSQL, id)
 
 	defer rows.Close()
