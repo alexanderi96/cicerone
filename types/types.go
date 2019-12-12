@@ -1,23 +1,5 @@
 package types
 
-type Regione struct {
-	IdRegione int
-	NomeRegione	string
-	Province	[]*Provincia //contiene gli id delle province
-}
-
-type Provincia struct {
-	IdProvincia int
-	NomeProvincia string
-	Citta []*Citta 
-}
-
-type Citta struct {
-	IdCitta int
-	NomeCitta string
-	Cap 	[]int
-}
-
 type Evento struct {
 	IdEvento 			int
 	Creatore			int
@@ -41,6 +23,24 @@ type MiniEvento struct {
 	IdEvento 	int
 	Titolo		string
 	Descrizione	string
+}
+
+type Regione struct {
+	IdRegione int
+	NomeRegione	string
+	Province	[]*Provincia //contiene gli id delle province
+}
+
+type Provincia struct {
+	IdProvincia int
+	NomeProvincia string
+	Citta []*Citta 
+}
+
+type Citta struct {
+	IdCitta int
+	NomeCitta string
+	Cap 	[]int
 }
 
 type Lingua struct {

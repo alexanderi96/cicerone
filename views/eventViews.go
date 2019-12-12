@@ -3,7 +3,7 @@ package views
 import (
 	//"html/template"
 	//"io/ioutil"
-	//"log"
+	"log"
 	"net/http"
 	//"os"
 	"strconv"
@@ -48,4 +48,42 @@ func AddEvent(w http.ResponseWriter, r *http.Request) {
 	} else {
 		http.Redirect(w, r, "/", 302)
 	}
+}
+
+func DeleteEventFunction(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		http.Redirect(w, r, "/", http.StatusBadRequest)
+		return
+	}
+	r.ParseForm()
+
+	id := r.Form.Get("id")
+	log.Println(id)
+	if id == "all" {
+		log.Println("sus")
+		err := db.DeleteEveryEvent()
+		if err != nil {
+			log.Println("Error deleting tasks, ", err)
+			http.Redirect(w, r, "/", http.StatusInternalServerError)
+		}
+		http.Redirect(w, r, "/", http.StatusFound)
+	} else {
+		id, err := strconv.Atoi(id)
+		if err != nil {
+			log.Println(err)
+			http.Redirect(w, r, "/", http.StatusBadRequest)
+		} else {
+			err = db.DeleteEventById(id)
+			if err != nil {
+				log.Println("Error deleting task, ", err)
+			} else {
+				log.Println("Event deleted")
+			}
+			http.Redirect(w, r, "/deleted", http.StatusFound)
+		}
+	}
+}
+
+func BookEvent(w http.ResponseWriter, r *http.Request) {
+
 }

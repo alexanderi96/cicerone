@@ -8,18 +8,14 @@ import (
 
 
 func CreateEvent(e types.Evento) error {
-	log.Println(e)
-	err := gQuery("insert into Evento (FkCiceroneEvento, DataInizio, DataFine, Titolo, Descrizione, Itinerario, MinPart, MaxPart, Costo, LuogoRitrovo, PrenotabileFinoAl, Categoria) values(?,?,?,?,?,?,?,?,?,?,?,?)",
+	return gQuery("insert into Evento (FkCiceroneEvento, DataInizio, DataFine, Titolo, Descrizione, Itinerario, MinPart, MaxPart, Costo, LuogoRitrovo, PrenotabileFinoAl, Categoria) values(?,?,?,?,?,?,?,?,?,?,?,?)",
 					e.Creatore, e.DataInizio, e.DataFine, e.Titolo,
 					e.Descrizione, e.Itinerario, e.MinPart,
 					e.MaxPart, e.Costo, e.Indirizzo,
 					e.DataScadenzaPren, e.Categoria)
-	return err
 }
 
-func GetEvents(E chan []types.MiniEvento) {
-	log.Println("Getting events")
-	var Eventi []types.MiniEvento
+func GetEvents() (E []types.MiniEvento, e error) {
 	var Evento types.MiniEvento
 	var rows *sql.Rows
 
@@ -31,15 +27,15 @@ func GetEvents(E chan []types.MiniEvento) {
 		Evento = types.MiniEvento {}
 		err = rows.Scan(&Evento.IdEvento, &Evento.Titolo, &Evento.Descrizione)
 		if err != nil {
-			log.Println(err)
+			return E, e
 		}
-		Eventi = append(Eventi, Evento)
+		E = append(E, Evento)
 	}
-	E <- Eventi
+	return E, nil
 
 }
 
-func GetEvent(id int, Evento types.Evento) error {
+func GetEventById(id int) (Evento types.Evento, e error) {
 	log.Println("Getting Event")
 	var rows *sql.Rows
 
@@ -49,35 +45,24 @@ func GetEvent(id int, Evento types.Evento) error {
 	defer rows.Close()
 	if rows.Next() {
 
-		err = rows.Scan(&Evento.IdEvento, &Evento.Creatore, &Evento.DataInizio, &Evento.DataFine, &Evento.Titolo, &Evento.Descrizione, &Evento.Itinerario, &Evento.MinPart, &Evento.MaxPart, &Evento.Costo, &Evento.Indirizzo, &Evento.DataScadenzaPren)
-		if err != nil {
-			return err
+		e = rows.Scan(&Evento.IdEvento, &Evento.Creatore, &Evento.DataInizio, &Evento.DataFine, &Evento.Titolo, &Evento.Descrizione, &Evento.Itinerario, &Evento.MinPart, &Evento.MaxPart, &Evento.Costo, &Evento.Indirizzo, &Evento.DataScadenzaPren)
+		if e != nil {
+			Evento = types.Evento {}
+			return Evento, e
 		}
 	}
 
-	return nil
+	return Evento, nil
 }
 
 func DeleteEveryEvent() error {
-	
 	basicSQL := "delete from Evento"
-	err := gQuery(basicSQL)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return gQuery(basicSQL)
 }
 
-func DeleteEvent(id int) error {
-	
-	basicSQL := "delete from Evento"
-	err := gQuery(basicSQL)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
+func DeleteEventById(id int) (e error) {
+	basicSQL := "delete from Evento where IdEvento = ?"
+	e = gQuery(basicSQL, id)
+	//TODO: notify every interested user that this event was deleted 
+	return
 }
