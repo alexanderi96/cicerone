@@ -15,6 +15,9 @@
 		{{else}}
 			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ciceroneModal">Become Cicerone</button>
 		{{end}}
+		<br>
+		<br>
+		<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteaccountModal">Delete my account</button>
 	</p>
 </div>
 
@@ -23,4 +26,38 @@
 <!-- Modal Cicerone -->
 <div class="modal fade" id="ciceroneModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   {{template "_bcicerone.html" .}}
+</div>
+
+<!-- Delete account Modal -->
+<div class="modal fade" id="deleteaccountModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Are you really sure to go away?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/delete-user/" method="POST">
+          <p>
+          	Insert your personal information to proceed
+          </p>
+          <div class="loginModal">
+            <label for="email">Email</label>
+            <input type="text" name="email" class="form-control" id="email" placeholder="Enter your email">
+          </div>
+          <div class="loginModal">
+            <label for="passwd">Password</label>
+            <input type="password" name="password" class="form-control" id="passwd" placeholder="Password">
+          </div>
+          <div class="modal-footer">
+          	<button type="button" class="btn btn-secondary" data-dismiss="modal">I changed my mind</button>
+            <input type="submit" value="Yes, delete my account" class="btn btn-danger" />
+          </div>
+        </form>
+      </div>
+      
+    </div>
+  </div>
 </div>
