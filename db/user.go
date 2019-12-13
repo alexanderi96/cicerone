@@ -141,7 +141,7 @@ func IsCicerone(email string) (false bool) {
 
 func DeleteSelectedUser(email, password string) (e error) {
 	if ValidUser(email, password) {
-		userSQL := "delete from Utente where email = ?"
+		userSQL := "delete from Utenti where EmailUtente = ?"
 		e = gQuery(userSQL, email)
 	} else {
 		e = errors.New("Invalid User")

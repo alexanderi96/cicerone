@@ -8,7 +8,7 @@ import (
 
 
 func CreateEvent(e types.Evento) error {
-	return gQuery("insert into Evento (FkCiceroneEvento, DataInizio, DataFine, Titolo, Descrizione, Itinerario, MinPart, MaxPart, Costo, LuogoRitrovo, PrenotabileFinoAl, Categoria) values(?,?,?,?,?,?,?,?,?,?,?,?)",
+	return gQuery("insert into Eventi(FkCiceroneEvento, DataInizioEvento, DataFineEvento, TitoloEvento, DescrizioneEvento, ItinerarioEvento, NumeroMinPart, NumeroMaxPart, CostoEvento, LuogoRitrovoEvento, PrenotabileFinoAl) values(?,?,?,?,?,?,?,?,?,?,?)",
 					e.Creatore, e.DataInizio, e.DataFine, e.Titolo,
 					e.Descrizione, e.Itinerario, e.MinPart,
 					e.MaxPart, e.Costo, e.Indirizzo,
@@ -56,7 +56,7 @@ func GetEventById(id int) (Evento types.Evento, e error) {
 }
 
 func DeleteEveryEvent() error {
-	basicSQL := "delete from Evento"
+	basicSQL := "delete from Eventi"
 	return gQuery(basicSQL)
 }
 
