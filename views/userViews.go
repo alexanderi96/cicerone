@@ -96,3 +96,18 @@ func DeleteMyAccount(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/logout/", 302)
 	}
 }
+
+func UpdateAccountInfo(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		http.Redirect(w, r, "/myprofile/", http.StatusUnauthorized)
+		return
+	}
+
+	r.ParseForm()
+
+	if r.Form.Get("IsCicerone") == "false" {
+		log.Println("sas")
+	} else {
+		log.Println("sos")
+	}
+}

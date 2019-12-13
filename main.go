@@ -35,6 +35,7 @@ func main(){
 	http.HandleFunc("/signup/", views.SignUpFunc) 
 	http.HandleFunc("/logout/", views.RequiresLogin(views.LogoutFunc)) 
 	http.HandleFunc("/delete-user/", views.RequiresLogin(views.DeleteMyAccount))
+	http.HandleFunc("/update-user/", views.RequiresLogin(views.UpdateAccountInfo))
 
 	http.HandleFunc("/", views.RequiresLogin(views.DisplayPage)) // User must be logged in to access the homepage. If he isn't he will recieve a page with the project description and the possibility to login or register
 	http.HandleFunc("/go-cicerone/", views.RequiresLogin(views.GoCicerone))

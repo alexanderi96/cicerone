@@ -62,7 +62,7 @@ func ValidUser(email, password string) bool {
 //GetUserID will get the user's ID from the database
 func GetUserID(email string) int {
 	var userID int
-	userSQL := "select IdUtente from Utenti where EmailUtente=?"
+	userSQL := "select IdUtente from Utenti where EmailUtente = ?"
 	rows := database.query(userSQL, email)
 
 	defer rows.Close()
@@ -123,7 +123,7 @@ func IsCicerone(email string) (false bool) {
 		log.Println("Unable to determin user Id")
 		return
 	}
-	userSQL := "select IdCicerone from Ciceroni where IdCicerone=?"
+	userSQL := "select IdCicerone from Ciceroni where IdCicerone = ?"
 	rows := database.query(userSQL, uid)
 
 	defer rows.Close()
@@ -145,6 +145,24 @@ func DeleteSelectedUser(email, password string) (e error) {
 		e = gQuery(userSQL, email)
 	} else {
 		e = errors.New("Invalid User")
+	}
+	return
+}
+
+func UpdateUserInfo(user types.User) (e error) {
+	switch user := user.(type) {
+	case types.Cicerone:
+		updateSQL := "update Utenti set NomeUtente = ?, CognomeUtente = ?, SessoUtente = ?, DataNascitaUtente = ?, EmailUtente = ?, PasswordUtente = ? where IdUtente = ?"
+		if e = gQuery(updateSQL, user.Nome, user.Cognome, user.Sesso, user.DataNascita, user.Email, user.Password, user.IdUtente); e != nil {
+			updateCSQL := "update Ciceroni set TelefonoCicerone = ?, CodiceFiscaleCicerone = ?, IbanCicerone = ? where IdCicerone = ?"
+			e = gQuery(updateCSQL, user.Tel, user.CodFis, user.Iban, user.IdUtente);
+		}
+
+	case types.Globetrotter:
+		updateSQL := "update Utenti set NomeUtente = ?, CognomeUtente = ?, SessoUtente = ?, DataNascitaUtente = ?, EmailUtente = ?, PasswordUtente = ? where IdUtente = ?"
+		e = gQuery(updateSQL, user.Nome, user.Cognome, user.Sesso, user.DataNascita, user.Email, user.Password, user.IdUtente)
+	default:
+		e = errors.New("Invalid User Type")
 	}
 	return
 }
