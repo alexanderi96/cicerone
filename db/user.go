@@ -80,7 +80,7 @@ func GetUserID(email string) int {
 func GetUserInfo(email string) (u types.User){
 	if IsCicerone(email) {
 		user := types.Cicerone{}
-		userSQL := "select IdUtente, Nome, Cognome, Sesso, DataNascita, Email, Fcode, Telefono, Iban from Utente join Cicerone on Utente.IdUtente = Cicerone.IdCicerone where Email = ?"
+		userSQL := "select IdUtente, NomeUtente, CognomeUtente, SessoUtente, DataNascitaUtente, EmailUtente, CodiceFiscaleCicerone, TelefonoCicerone, IbanCicerone from Utenti join Ciceroni on Utenti.IdUtente = Ciceroni.IdCicerone where EmailUtente = ?"
 		rows := database.query(userSQL, email)
 		defer rows.Close() //must defer after every database interaction
 
@@ -95,7 +95,7 @@ func GetUserInfo(email string) (u types.User){
 
 	} else {
 		user := types.Globetrotter{}
-		userSQL := "select IdUtente, Nome, Cognome, Sesso, DataNascita, Email from Utente where Email=?"
+		userSQL := "select IdUtente, NomeUtente, CognomeUtente, SessoUtente, DataNascitaUtente, EmailUtente from Utenti where EmailUtente = ?"
 		rows := database.query(userSQL, email)
 		defer rows.Close() //must defer after every database interaction
 
