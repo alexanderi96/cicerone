@@ -5,8 +5,7 @@ CREATE TABLE Utenti(
 	SessoUtente INTEGER NOT NULL,
 	DataNascitaUtente integer NOT NULL,
 	EmailUtente CHAR(50) NOT NULL,
-	PasswordUtente VARCHAR(15) NOT NULL,
-	IsCicerone BOOLEAN
+	PasswordUtente VARCHAR(15) NOT NULL
 );
 
 CREATE TABLE Ciceroni(
@@ -51,18 +50,16 @@ CREATE TABLE Eventi(
 	IdEvento INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	FkCiceroneEvento INTEGER REFERENCES Ciceroni(IdCicerone),
 	FkCittaEvento INTEGER REFERENCES Citta(IdCitta),
-	DataInizioEvento integer NOT NULL,
-	DataFineEvento integer NOT NULL,
-	OraInizioEvento time NOT NULL,
-	OraFineEvento time NOT NULL,
+	TitoloEvento CHAR(25) NOT NULL,
+	DataInizioEvento INTEGER NOT NULL,
+	DataFineEvento INTEGER NOT NULL,
 	DescrizioneEvento TEXT NOT NULL,
 	ItinerarioEvento TEXT NOT NULL,
 	NumeroMinPart INTEGER NOT NULL,
 	NumeroMaxPart INTEGER NOT NULL CHECK(NumeroMaxPart>=NumeroMinPart),
 	CostoEvento REAL NOT NULL,
 	IndirizzoPartenzaEvento CHAR(30) NOT NULL,
-	DataScadenzaPrenotazione integer NOT NULL,
-	CategoriaEvento CHAR(25) NOT NULL
+	DataScadenzaPrenotazione INTEGER NOT NULL,
 );
 
 CREATE TABLE Feedback(
@@ -87,8 +84,8 @@ CREATE TABLE EveLin(
 
 CREATE TABLE Prenotazioni(
 	IdPrenotazione INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	FkUtentePrenotazione REFERENCES Utenti(IdUtente),
-	FkEventoPrenotazione REFERENCES Eventi(IdEvento),
+	FkUtentePrenotazione INTEGER REFERENCES Utenti(IdUtente),
+	FkEventoPrenotazione INTEGER REFERENCES Eventi(IdEvento),
 	DataPrenotazione INTEGER NOT NULL,
 	FlagAccettazionePrenotazione BOOLEAN NOT NULL
 );
