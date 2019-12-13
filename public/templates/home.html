@@ -36,13 +36,15 @@
     </div>
    {{end}}
    </div>
-   <div class="fixed-action-btn smooth-scroll" style="bottom: 45px; right: 24px;">
-     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#NewEventModal">Add Event</button>
-     <form action="/delete/" method="POST">
-       <input type="hidden" name="id" value="all"/>
-       <input type="submit" value="Delete every event"class="btn btn-primary" >
-     </form>
-   </div> 
+   {{ if .Utente.IsCicerone}}
+    <div class="fixed-action-btn smooth-scroll" style="bottom: 45px; right: 24px;">
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#NewEventModal">Add Event</button>
+      <form action="/delete/" method="POST">
+        <input type="hidden" name="id" value="all"/>
+        <input type="submit" value="Delete every event"class="btn btn-primary" >
+      </form>
+    </div>
+   {{end}}
   {{end}}
 
 

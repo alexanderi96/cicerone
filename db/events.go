@@ -39,7 +39,7 @@ func GetEventById(id int) (Evento types.Evento, e error) {
 	log.Println("Getting Event")
 	var rows *sql.Rows
 
-	basicSQL := "select IdEvento, FkCiceroneEvento, DataInizioEvento, DataFineEvento, TitoloEvento, DescrizioneEvento, ItinerarioEvento, NumeroMinPart, NumeroMaxPart, CostoEvento, IndirizzoPartenzaEvento, DataScadenzaPrenotazione from Eventi where IdEvento = ?"
+	basicSQL := "select IdEvento, FkCiceroneEvento, DataInizioEvento, DataFineEvento, TitoloEvento, DescrizioneEvento, ItinerarioEvento, NumeroMinPart, NumeroMaxPart, CostoEvento, LuogoRitrovoEvento, PrenotabileFinoAl from Eventi where IdEvento = ?"
 	rows = database.query(basicSQL, id)
 
 	defer rows.Close()
@@ -61,7 +61,7 @@ func DeleteEveryEvent() error {
 }
 
 func DeleteEventById(id int) (e error) {
-	basicSQL := "delete from Evento where IdEvento = ?"
+	basicSQL := "delete from Eventi where IdEvento = ?"
 	e = gQuery(basicSQL, id)
 	//TODO: notify every interested user that this event was deleted 
 	return
