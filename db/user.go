@@ -13,7 +13,7 @@ func CreateUser(u types.User) error {
 	default:
 		log.Println("Undefined user type")
 	case types.Cicerone:
-		err := gQuery("insert into Utente(Nome, Cognome, Sesso, DataNascita, Email, Password) values(?,?,?,?,?,?)", u.Nome, u.Cognome, u.Sesso, u.DataNascita, u.Email, u.Password)
+		err := gQuery("insert into Utenti(NomeUtente, CognomeUtente, SessoUtente, DataNascitaUtente, EmailUtente, PasswordUtente) values(?,?,?,?,?,?)", u.Nome, u.Cognome, u.Sesso, u.DataNascita, u.Email, u.Password)
 		if err != nil {
 			return err
 		} else {
@@ -21,13 +21,13 @@ func CreateUser(u types.User) error {
 			if u.IdUtente < 0 {
 				return errors.New("Invalid User Id")
 			}
-			err := gQuery("insert into Cicerone(IdCicerone, Fcode, Telefono, Iban) values (?,?,?,?)", u.IdUtente, u.Tel, u.Iban, u.CodFis)
+			err := gQuery("insert into Ciceroni(IdCicerone, CodiceFiscaleCicerone, TelefonoCicerone, IbanCicerone) values (?,?,?,?)", u.IdUtente, u.Tel, u.Iban, u.CodFis)
 			if err != nil {
 				return err
 			}
 		}
 	case types.Globetrotter:
-		err := gQuery("insert into Utente(Nome, Cognome, Sesso, DataNascita, Email, Password) values(?,?,?,?,?,?)", u.Nome, u.Cognome, u.Sesso, u.DataNascita, u.Email, u.Password)
+		err := gQuery("insert into Utenti(NomeUtente, CognomeUtente, SessoUtente, DataNascitaUtente, EmailUtente, PasswordUtente) values(?,?,?,?,?,?)", u.Nome, u.Cognome, u.Sesso, u.DataNascita, u.Email, u.Password)
 		return err
 	}
 	return nil
@@ -37,12 +37,14 @@ func CreateUser(u types.User) error {
 //combination is valid
 func ValidUser(email, password string) bool {
 	var passwordFromDB string
-	plainSQL := "select PasswordUtente from Utenti where EmailUtente=?"
+	plainSQL := "select PasswordUtente from Utenti where EmailUtente = ?"
 	log.Print("validating user ", email)
 	rows := database.query(plainSQL, email)
 
 	defer rows.Close()
+	log.Println("sus")
 	if rows.Next() {
+		log.Println("sus")
 		err := rows.Scan(&passwordFromDB)
 		if err != nil {
 			return false
