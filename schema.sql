@@ -58,13 +58,8 @@ CREATE TABLE Eventi(
 	NumeroMinPart INTEGER NOT NULL,
 	NumeroMaxPart INTEGER NOT NULL CHECK(NumeroMaxPart>=NumeroMinPart),
 	CostoEvento REAL NOT NULL,
-<<<<<<< HEAD
 	LuogoRitrovoEvento CHAR(30) NOT NULL,
 	PrenotabileFinoAl INTEGER NOT NULL
-=======
-	IndirizzoPartenzaEvento CHAR(30) NOT NULL,
-	DataScadenzaPrenotazione INTEGER NOT NULL
->>>>>>> 0ea8e7247cf4904377755bf4bac2e4527cbf7f74
 );
 
 CREATE TABLE Feedback(

@@ -12,7 +12,7 @@ func CreateEvent(e types.Evento) error {
 					e.Creatore, e.DataInizio, e.DataFine, e.Titolo,
 					e.Descrizione, e.Itinerario, e.MinPart,
 					e.MaxPart, e.Costo, e.Indirizzo,
-					e.DataScadenzaPren, e.Categoria)
+					e.DataScadenzaPren)
 }
 
 func GetEvents() (E []types.MiniEvento, e error) {
