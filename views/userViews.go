@@ -21,31 +21,9 @@ func SignUpFunc(w http.ResponseWriter, r *http.Request) {
 	var u types.User
 
 	if r.Form.Get("cicerone") != "on" {
-		u = types.Globetrotter{
-			-1,
-			r.Form.Get("name"),
-			r.Form.Get("surname"),
-			r.Form.Get("gender"),
-			utils.DateToUnix(r.Form.Get("bdate")),
-			r.Form.Get("email"),
-			r.Form.Get("password")}
+		u = parseGlobe(r)
 	} else {
-		tel, _ := strconv.Atoi(r.Form.Get("tel"))
-
-		u = types.Cicerone{
-			types.Globetrotter{
-				-1,
-				r.Form.Get("name"),
-				r.Form.Get("surname"),
-				r.Form.Get("gender"),
-				utils.DateToUnix(r.Form.Get("bdate")),
-				r.Form.Get("email"),
-
-				//TODO: must hash the passwd
-				r.Form.Get("password")},
-			r.Form.Get("fcode"),
-			tel,
-			r.Form.Get("iban")}
+		u = parseCice(r)
 	}
 	
 	err := db.CreateUser(u)
@@ -105,9 +83,55 @@ func UpdateAccountInfo(w http.ResponseWriter, r *http.Request) {
 
 	r.ParseForm()
 
-	if r.Form.Get("IsCicerone") == "false" {
-		log.Println("sas")
+	var u types.User
+	uid, _ := strconv.Atoi(r.Form.Get("userid"))
+
+	//TODO: make something to check which user details has been changed maybe using a range function
+
+	if db.IsCicerone(uid) {
+		u = parseCice(r)
 	} else {
-		log.Println("sos")
+		u = parseGlobe(r)
 	}
+	log.Println(u)
+	if e := db.UpdateUserInfo(uid, u); e != nil {
+		log.Println("error updating user information, keeping old details")
+		http.Redirect(w, r, "/myprofile/", http.StatusInternalServerError)
+	} else {
+		http.Redirect(w, r, "/myprofile/", 302)	
+	}
+
+	
+}
+
+func parseCice(r *http.Request) (u types.Cicerone) {
+	tel, _ := strconv.Atoi(r.Form.Get("tel"))
+
+	u = types.Cicerone{
+		types.Globetrotter{
+			-1,
+			r.Form.Get("name"),
+			r.Form.Get("surname"),
+			r.Form.Get("gender"),
+			utils.DateToUnix(r.Form.Get("bdate")),
+			r.Form.Get("email"),
+
+			//TODO: must hash the passwd
+			r.Form.Get("password")},
+		r.Form.Get("fcode"),
+		tel,
+		r.Form.Get("iban")}
+	return
+}
+
+func parseGlobe(r *http.Request) (u types.Globetrotter){
+	u = types.Globetrotter{
+		-1,
+		r.Form.Get("name"),
+		r.Form.Get("surname"),
+		r.Form.Get("gender"),
+		utils.DateToUnix(r.Form.Get("bdate")),
+		r.Form.Get("email"),
+		r.Form.Get("password")}
+	return
 }

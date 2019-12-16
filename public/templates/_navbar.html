@@ -11,16 +11,12 @@
     
     <!--TODO: fix the checkbox to enable or disable cicerone fields-->
     <script type="text/javascript">
-      $('#cicerone').click(function () {
-        console.log(checked);
-        if this.checked = true {
-          document.getElementById("tel").disabled = true;
-          document.getElementById("tel").hidden = true;
-        } else {
-          document.getElementById("ciceinfo").disabled = false;
-          document.getElementById("ciceinfo").hidden = true;
-        }
-      });
+      const showHideCiceInfo = () => {
+        document
+          .getElementById('ifCice')
+          .style
+          .display = document.getElementById('cicerone').checked ? 'block' : 'none'
+      }
     </script>
 
     <title>Cicerone</title>
@@ -159,8 +155,8 @@
               <input type="password" name="password"class="form-control" id="password" placeholder="password">
             </div>
             <div class="form-group">
-              <input type="checkbox" name="cicerone" id="cicerone"> I want to be able to create new events as well!
-              <div class="form-group">
+              <input type="checkbox" name="cicerone" id="cicerone" onclick="showHideCiceInfo()"> I want to be able to create new events as well!
+              <div class="form-group" id="ifCice" style="display: none;">
                 <div class="form-group">
                   <label for="tel">Phone Number</label>
                   <input type="text" name="tel" class="form-control" id="tel" placeholder="Enter phone number">

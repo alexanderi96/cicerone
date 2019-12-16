@@ -9,7 +9,6 @@ CREATE TABLE Utenti(
 );
 
 CREATE TABLE Ciceroni(
-	IdCicerone INTEGER PRIMARY KEY,
 	FkUtenteCicerone INTEGER REFERENCES Utente(IdUtente),
 	CodiceFiscaleCicerone CHAR(16) NOT NULL,
 	TelefonoCicerone INTEGER NOT NULL,

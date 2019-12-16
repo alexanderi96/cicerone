@@ -18,6 +18,8 @@ Manually:
     change dir to the respective folder and create the db file: cat schema.sql | sqlite3 cicerone.db
     run go build
     ./cicerone
+     remember to set the environment variable for the session cookie store:
+     under windows: $Env:CICERONE_SESSION_KEY="your super secret key"
     open localhost:8081
 
 You can change the port in the config file

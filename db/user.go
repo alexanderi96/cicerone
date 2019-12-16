@@ -78,7 +78,7 @@ func GetUserID(email string) int {
 
 //TODO: currently I'm unable to determin if an user is cicerone or not. Must fix that
 func GetUserInfo(email string) (u types.User){
-	if IsCicerone(email) {
+	if IsCicerone(GetUserID(email)) {
 		user := types.Cicerone{}
 		userSQL := "select IdUtente, NomeUtente, CognomeUtente, SessoUtente, DataNascitaUtente, EmailUtente, CodiceFiscaleCicerone, TelefonoCicerone, IbanCicerone from Utenti join Ciceroni on Utenti.IdUtente = Ciceroni.IdCicerone where EmailUtente = ?"
 		rows := database.query(userSQL, email)
@@ -116,23 +116,19 @@ func AddCicerone(uid, tel int, iban, fcode string) error {
 	return err
 }
 
-func IsCicerone(email string) (false bool) {
-	var uidFromDB int
-	uid := GetUserID(email)
-	if uid == -1 {
-		log.Println("Unable to determin user Id")
-		return
-	}
-	userSQL := "select IdCicerone from Ciceroni where IdCicerone = ?"
+func IsCicerone(uid int) (false bool) {
+	userSQL := "select count(IdCicerone) from Ciceroni where IdCicerone = ?"
 	rows := database.query(userSQL, uid)
 
 	defer rows.Close()
-
+	var nr int
 	if rows.Next() {
-		err := rows.Scan(&uidFromDB)
+		err := rows.Scan(&nr)
 		if err != nil {
 			log.Println(err)
 			return
+		} else if nr < 1 {
+			return 
 		}
 		return true
 	}
@@ -149,18 +145,18 @@ func DeleteSelectedUser(email, password string) (e error) {
 	return
 }
 
-func UpdateUserInfo(user types.User) (e error) {
+func UpdateUserInfo(uid int, user types.User) (e error) {
 	switch user := user.(type) {
 	case types.Cicerone:
 		updateSQL := "update Utenti set NomeUtente = ?, CognomeUtente = ?, SessoUtente = ?, DataNascitaUtente = ?, EmailUtente = ?, PasswordUtente = ? where IdUtente = ?"
-		if e = gQuery(updateSQL, user.Nome, user.Cognome, user.Sesso, user.DataNascita, user.Email, user.Password, user.IdUtente); e != nil {
+		if e = gQuery(updateSQL, user.Nome, user.Cognome, user.Sesso, user.DataNascita, user.Email, user.Password, uid); e != nil {
 			updateCSQL := "update Ciceroni set TelefonoCicerone = ?, CodiceFiscaleCicerone = ?, IbanCicerone = ? where IdCicerone = ?"
-			e = gQuery(updateCSQL, user.Tel, user.CodFis, user.Iban, user.IdUtente);
+			e = gQuery(updateCSQL, user.Tel, user.CodFis, user.Iban, uid);
 		}
 
 	case types.Globetrotter:
 		updateSQL := "update Utenti set NomeUtente = ?, CognomeUtente = ?, SessoUtente = ?, DataNascitaUtente = ?, EmailUtente = ?, PasswordUtente = ? where IdUtente = ?"
-		e = gQuery(updateSQL, user.Nome, user.Cognome, user.Sesso, user.DataNascita, user.Email, user.Password, user.IdUtente)
+		e = gQuery(updateSQL, user.Nome, user.Cognome, user.Sesso, user.DataNascita, user.Email, user.Password, uid)
 	default:
 		e = errors.New("Invalid User Type")
 	}
