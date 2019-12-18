@@ -9,7 +9,7 @@ CREATE TABLE Utenti(
 );
 
 CREATE TABLE Ciceroni(
-	FkUtenteCicerone INTEGER REFERENCES Utente(IdUtente),
+	IdCicerone REFERENCES Utente(IdUtente),
 	CodiceFiscaleCicerone CHAR(16) NOT NULL,
 	TelefonoCicerone INTEGER NOT NULL,
 	IbanCicerone CHAR(27) NOT NULL
@@ -22,13 +22,13 @@ CREATE TABLE Regioni(
 
 CREATE TABLE Province(
 	IdProvincia INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	FkRegioneProvincia INTEGER REFERENCES Regioni(IdRegione),
+	FkRegioneProvincia REFERENCES Regioni(IdRegione),
 	NomeProvincia CHAR(25) NOT NULL
 );
 
 CREATE TABLE Citta(
 	IdCitta	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	FkProvinciaCitta INTEGER REFERENCES Province(IdProvincia),
+	FkProvinciaCitta REFERENCES Province(IdProvincia),
 	NomeCitta CHAR(25) NOT NULL
 );
 
@@ -40,15 +40,15 @@ CREATE TABLE Cap(
 
 CREATE TABLE CapCit(
 	IdCapCit INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	FkCittaCapCit INTEGER REFERENCES Citta(IdCitta),
-	FKCapCapCit INTEGER REFERENCES Cap(IdCap),
+	FkCittaCapCit REFERENCES Citta(IdCitta),
+	FKCapCapCit REFERENCES Cap(IdCap),
 	UNIQUE(FkCittaCapCit, FkCapCapCit)
 );
 
 CREATE TABLE Eventi(
 	IdEvento INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	FkCiceroneEvento INTEGER REFERENCES Ciceroni(IdCicerone),
-	FkCittaEvento INTEGER REFERENCES Citta(IdCitta),
+	FkCiceroneEvento REFERENCES Ciceroni(IdCicerone),
+	FkCittaEvento REFERENCES Citta(IdCitta),
 	TitoloEvento CHAR(25) NOT NULL,
 	DataInizioEvento INTEGER NOT NULL,
 	DataFineEvento INTEGER NOT NULL,
@@ -63,8 +63,8 @@ CREATE TABLE Eventi(
 
 CREATE TABLE Feedback(
 	IdFeedback INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	FkUtenteFeedback INTEGER REFERENCES Utenti(IdUtente),
-	FkEventoFeedback INTEGER REFERENCES Eventi(IdEvento),
+	FkUtenteFeedback REFERENCES Utenti(IdUtente),
+	FkEventoFeedback REFERENCES Eventi(IdEvento),
 	CommentoFeedback TEXT NOT NULL,
 	DataFeedback INTEGER NOT NULL
 );
@@ -76,15 +76,15 @@ CREATE TABLE Lingue(
 
 CREATE TABLE EveLin(
 	IdEveLin INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	FkEventoEveLin INTEGER REFERENCES Eventi(IdEvento),
-	FkLinguaEveLin INTEGER REFERENCES Lingue(IdLingua),
+	FkEventoEveLin REFERENCES Eventi(IdEvento),
+	FkLinguaEveLin REFERENCES Lingue(IdLingua),
 	UNIQUE(FkEventoEveLin, FkLinguaEveLin)
 );
 
 CREATE TABLE Prenotazioni(
 	IdPrenotazione INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	FkUtentePrenotazione INTEGER REFERENCES Utenti(IdUtente),
-	FkEventoPrenotazione INTEGER REFERENCES Eventi(IdEvento),
+	FkUtentePrenotazione REFERENCES Utenti(IdUtente),
+	FkEventoPrenotazione REFERENCES Eventi(IdEvento),
 	DataPrenotazione INTEGER NOT NULL,
 	FlagAccettazionePrenotazione BOOLEAN NOT NULL
 );
