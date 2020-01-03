@@ -22,7 +22,7 @@ func IsLoggedIn(r *http.Request) bool {
 	return false
 }
 
-//GetCurrentUser returns the username of the logged in user
+//GetCurrentUser returns the email of the logged in user
 func GetCurrentUser(r *http.Request) string {
 	session, err := Store.Get(r, "session")
 	if err == nil {

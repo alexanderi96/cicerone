@@ -17,6 +17,7 @@ package types
 
 type User interface{
 	IsCicerone()	bool
+	GetId()			int
 }
 
 type Globetrotter struct {
@@ -42,4 +43,12 @@ func (g Globetrotter) IsCicerone() bool {
 
 func (c Cicerone) IsCicerone() bool {
 	return true
+}
+
+func (g Globetrotter) GetId() int {
+	return g.IdUtente
+}
+
+func (c Cicerone) GetId() int {
+	return c.IdUtente
 }

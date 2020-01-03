@@ -6,45 +6,78 @@ import (
 	"github.com/alexanderi96/cicerone/types"
 )
 
-//CreateUser will create a new user, take as input the parameters and
-//insert them into the database
-func CreateUser(u types.User) error {
+//CreateUser will create a new user. It takes as input a generic user type and optionally the UserId
+func CreateUser(u types.User) (e error) {
+	dCice := "insert into Utenti(NomeUtente, CognomeUtente, SessoUtente, DataNascitaUtente, EmailUtente, PasswordUtente) values(?,?,?,?,?,?)"
+	dCiceId := "insert into Utenti(IdUtente, NomeUtente, CognomeUtente, SessoUtente, DataNascitaUtente, EmailUtente, PasswordUtente) values(?,?,?,?,?,?,?)"
+	dGlobe := "insert into Utenti(NomeUtente, CognomeUtente, SessoUtente, DataNascitaUtente, EmailUtente, PasswordUtente) values(?,?,?,?,?,?)"
+	dGlobeId := "insert into Utenti(IdUtente, NomeUtente, CognomeUtente, SessoUtente, DataNascitaUtente, EmailUtente, PasswordUtente) values(?,?,?,?,?,?,?)"
+
 	switch u := u.(type) {
 	default:
-		log.Println("Undefined user type")
+		return errors.New("Undefined user type")
 	case types.Cicerone:
-		err := gQuery("insert into Utenti(NomeUtente, CognomeUtente, SessoUtente, DataNascitaUtente, EmailUtente, PasswordUtente) values(?,?,?,?,?,?)", u.Nome, u.Cognome, u.Sesso, u.DataNascita, u.Email, u.Password)
-		if err != nil {
-			return err
+		if u.IdUtente == 0 {
+			e = gQuery(dCice, u.Nome, u.Cognome, u.Sesso, u.DataNascita, u.Email, u.Password)
+			if e == nil {
+				u.IdUtente = GetUserID(u.Email)
+			} else {
+				return
+			}
+		} else if checkIdAviability(u.IdUtente) {
+			e = gQuery(dCiceId, u.IdUtente, u.Nome, u.Cognome, u.Sesso, u.DataNascita, u.Email, u.Password)
 		} else {
-			u.IdUtente = GetUserID(u.Email)
-			if u.IdUtente < 0 {
-				return errors.New("Invalid User Id")
-			}
-			err := gQuery("insert into Ciceroni(IdCicerone, CodiceFiscaleCicerone, TelefonoCicerone, IbanCicerone) values (?,?,?,?)", u.IdUtente, u.Tel, u.Iban, u.CodFis)
-			if err != nil {
-				return err
-			}
+			return errors.New("Unavailable user id")
 		}
+
+		if e != nil {
+			return
+		} else {
+			e = gQuery("insert into Ciceroni(IdCicerone, CodiceFiscaleCicerone, TelefonoCicerone, IbanCicerone) values (?,?,?,?)", u.IdUtente, u.Tel, u.Iban, u.CodFis)
+		}
+		
+		
 	case types.Globetrotter:
-		err := gQuery("insert into Utenti(NomeUtente, CognomeUtente, SessoUtente, DataNascitaUtente, EmailUtente, PasswordUtente) values(?,?,?,?,?,?)", u.Nome, u.Cognome, u.Sesso, u.DataNascita, u.Email, u.Password)
-		return err
+		if u.IdUtente == 0 {
+			e = gQuery(dGlobe, u.Nome, u.Cognome, u.Sesso, u.DataNascita, u.Email, u.Password)
+		} else if checkIdAviability(u.IdUtente) {
+			e = gQuery(dGlobeId, u.IdUtente, u.Nome, u.Cognome, u.Sesso, u.DataNascita, u.Email, u.Password)
+		} else {
+			return errors.New("Unavailable user id")
+		}
 	}
-	return nil
+	return
+}
+
+func checkIdAviability(uid int) (false bool) {
+	var idCount int
+	userSQL := "select count(IdUtente) from Utenti left join Ciceroni on Utenti.IdUtente = Ciceroni.IdCicerone where IdUtente = ?"
+	log.Println("Checking if the id is already taken")
+	rows := database.query(userSQL, uid)
+
+	defer rows.Close()
+	if rows.Next() {
+		e := rows.Scan(&idCount)
+		if e != nil {
+			return
+		} else if idCount != 0 {
+			return
+		}
+	}
+	return true
 }
 
 //ValidUser will check if the user exists in db and if exists if the username password
 //combination is valid
 func ValidUser(email, password string) bool {
 	var passwordFromDB string
-	plainSQL := "select PasswordUtente from Utenti where EmailUtente = ?"
+	//we don't want to validate a backed up user (id < 0)
+	plainSQL := "select PasswordUtente from Utenti where (EmailUtente = ? and IdUtente > 0)"
 	log.Print("validating user ", email)
 	rows := database.query(plainSQL, email)
 
 	defer rows.Close()
-	log.Println("sus")
 	if rows.Next() {
-		log.Println("sus")
 		err := rows.Scan(&passwordFromDB)
 		if err != nil {
 			return false
@@ -60,23 +93,32 @@ func ValidUser(email, password string) bool {
 }
 
 //GetUserID will get the user's ID from the database
-func GetUserID(email string) int {
-	var userID int
+func GetUserID(email string) (userID int) {
 	userSQL := "select IdUtente from Utenti where EmailUtente = ?"
 	rows := database.query(userSQL, email)
 
 	defer rows.Close()
 	if rows.Next() {
-		err := rows.Scan(&userID)
-		if err != nil {
+		if err := rows.Scan(&userID); err != nil {
 			log.Println(err)
-			return -1
 		}
 	}
-	return userID
+	return
 }
 
-//TODO: currently I'm unable to determin if an user is cicerone or not. Must fix that
+func GetUserEmail(uid int) (email string) {
+	userSQL := "select EmailUtente from Utenti where IdUtente = ?"
+	rows := database.query(userSQL, uid)
+
+	defer rows.Close()
+	if rows.Next() {
+		if err := rows.Scan(&email); err != nil {
+			log.Println(err)
+		}
+	}
+	return
+}
+
 func GetUserInfo(email string) (u types.User){
 	if IsCicerone(GetUserID(email)) {
 		user := types.Cicerone{}
@@ -137,28 +179,40 @@ func IsCicerone(uid int) (false bool) {
 
 func DeleteSelectedUser(email, password string) (e error) {
 	if ValidUser(email, password) {
-		userSQL := "delete from Utenti where EmailUtente = ?"
-		e = gQuery(userSQL, email)
+		uid := GetUserID(email)
+		if IsCicerone(uid) {
+			ciceSQL := "delete from Ciceroni where IdUtente = ?"
+			if e = gQuery(ciceSQL, uid); e != nil {
+				return
+			}
+		}
+		globeSQL := "delete from Utenti where EmailUtente = ?"
+		e = gQuery(globeSQL, email)
 	} else {
 		e = errors.New("Invalid User")
 	}
 	return
 }
 
-func UpdateUserInfo(uid int, user types.User) (e error) {
-	switch user := user.(type) {
-	case types.Cicerone:
-		updateSQL := "update Utenti set NomeUtente = ?, CognomeUtente = ?, SessoUtente = ?, DataNascitaUtente = ?, EmailUtente = ?, PasswordUtente = ? where IdUtente = ?"
-		if e = gQuery(updateSQL, user.Nome, user.Cognome, user.Sesso, user.DataNascita, user.Email, user.Password, uid); e != nil {
-			updateCSQL := "update Ciceroni set TelefonoCicerone = ?, CodiceFiscaleCicerone = ?, IbanCicerone = ? where IdCicerone = ?"
-			e = gQuery(updateCSQL, user.Tel, user.CodFis, user.Iban, uid);
+func DeleteUserById(uid int) (e error) {
+	if IsCicerone(uid) {
+		ciceSQL := "delete from Ciceroni where IdUtente = ?"
+		if e = gQuery(ciceSQL, uid); e != nil {
+			return
 		}
+	}
+	globeSQL := "delete from Utenti where IdUtente = ?"
+	e = gQuery(globeSQL, uid)
+	return 
+}
 
-	case types.Globetrotter:
-		updateSQL := "update Utenti set NomeUtente = ?, CognomeUtente = ?, SessoUtente = ?, DataNascitaUtente = ?, EmailUtente = ?, PasswordUtente = ? where IdUtente = ?"
-		e = gQuery(updateSQL, user.Nome, user.Cognome, user.Sesso, user.DataNascita, user.Email, user.Password, uid)
-	default:
-		e = errors.New("Invalid User Type")
+func InvertUserId(uid int) (e error) {
+	//let's delete the old backup (if there is one)
+	DeleteUserById(uid * -1)
+	updateSQL := " update Utenti set IdUtente = ? where IdUtente = ?"
+	if e = gQuery(updateSQL, uid * -1, uid); e != nil && IsCicerone(uid) {
+		updateSQL := "update Ciceroni set IdCicerone = ? where IdCicerone = ?"
+		e = gQuery(updateSQL, uid * -1, uid)
 	}
 	return
 }

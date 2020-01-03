@@ -80,36 +80,33 @@ func UpdateAccountInfo(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/myprofile/", http.StatusUnauthorized)
 		return
 	}
-
-	r.ParseForm()
-
-	var u types.User
-	uid, _ := strconv.Atoi(r.Form.Get("userid"))
-
-	//TODO: make something to check which user details has been changed maybe using a range function
-
-	if db.IsCicerone(uid) {
-		u = parseCice(r)
-	} else {
-		u = parseGlobe(r)
-	}
-	log.Println(u)
-	if e := db.UpdateUserInfo(uid, u); e != nil {
-		log.Println("error updating user information, keeping old details")
-		http.Redirect(w, r, "/myprofile/", http.StatusInternalServerError)
-	} else {
-		http.Redirect(w, r, "/myprofile/", 302)	
-	}
-
 	
+	uid := db.GetUserID(sessions.GetCurrentUser(r))
+	if db.IsCicerone(uid) {
+		if e := updateCice(r); e != nil {
+			log.Println("(uid: ", uid, ") error updating user information, keeping old details\nError: ", e)
+			http.Redirect(w, r, "/myprofile/", http.StatusInternalServerError)
+		}
+	} else {
+		if e := updateGlobe(r); e != nil {
+			log.Println("(uid: ", uid, ") error updating user information, keeping old details\nError: ", e)
+			http.Redirect(w, r, "/myprofile/", http.StatusInternalServerError)
+		}
+	}
+
+	http.Redirect(w, r, "/myprofile/", 302)	
 }
 
-func parseCice(r *http.Request) (u types.Cicerone) {
-	tel, _ := strconv.Atoi(r.Form.Get("tel"))
+//carico in memoria il vecchio utente in modo da confrontare i campi
+//(metodo poco elegante, ma efficace)
+func parseCice(r *http.Request) (c types.Cicerone) {
+	r.ParseForm()
 
-	u = types.Cicerone{
+	tel, _ := strconv.Atoi(r.Form.Get("tel"))
+	
+	c = types.Cicerone{
 		types.Globetrotter{
-			-1,
+			0,
 			r.Form.Get("name"),
 			r.Form.Get("surname"),
 			r.Form.Get("gender"),
@@ -121,17 +118,100 @@ func parseCice(r *http.Request) (u types.Cicerone) {
 		r.Form.Get("fcode"),
 		tel,
 		r.Form.Get("iban")}
+
 	return
 }
 
-func parseGlobe(r *http.Request) (u types.Globetrotter){
-	u = types.Globetrotter{
-		-1,
+func parseGlobe(r *http.Request) (g types.Globetrotter) {
+	r.ParseForm()
+
+	g = types.Globetrotter{
+		0,
 		r.Form.Get("name"),
 		r.Form.Get("surname"),
 		r.Form.Get("gender"),
 		utils.DateToUnix(r.Form.Get("bdate")),
 		r.Form.Get("email"),
 		r.Form.Get("password")}
+
+	return
+}
+
+func updateCice(r *http.Request) (e error) {
+	c := parseCice(r)
+	oc := db.GetUserInfo(sessions.GetCurrentUser(r))
+
+	//in order to use the interface without problems wee need to use the "type assertion"
+	if c.Nome == "" {
+		c.Nome = oc.(types.Cicerone).Nome
+	}
+	if c.Cognome == "" {
+		c.Cognome = oc.(types.Cicerone).Cognome
+	}
+	if c.Sesso == "" {
+		c.Sesso = oc.(types.Cicerone).Sesso
+	}
+	if c.DataNascita == 0 {
+		c.DataNascita = oc.(types.Cicerone).DataNascita
+	}
+	if c.Email == "" {
+		c.Email = oc.(types.Cicerone).Email
+	}
+	if c.Password == "" {
+		c.Password = oc.(types.Cicerone).Password
+	}
+	if c.CodFis == "" {
+		c.CodFis = oc.(types.Cicerone).CodFis
+	}
+	if c.Tel == 0 {
+		c.Tel = oc.(types.Cicerone).Tel
+	}
+	if c.Iban == "" {
+		c.Iban = oc.(types.Cicerone).Iban
+	}
+	
+	//do un id utente negativo alle vecchie info in modo da mantenerle come bk
+	//oc.InvertId()
+
+	return SwapInfo(c)
+}
+
+func updateGlobe(r *http.Request) (e error){
+
+	g := parseGlobe(r)
+
+	og := db.GetUserInfo(sessions.GetCurrentUser(r))
+
+	
+	
+	g.IdUtente = og.(types.Globetrotter).IdUtente
+	if g.Nome == "" {
+		g.Nome = og.(types.Globetrotter).Nome
+	}
+	if g.Cognome == "" {
+		g.Cognome = og.(types.Globetrotter).Cognome
+	}
+	if g.Sesso == "" {
+		g.Sesso = og.(types.Globetrotter).Sesso
+	}
+	if g.DataNascita == 0 {
+		g.DataNascita = og.(types.Globetrotter).DataNascita
+	}
+	if g.Email == "" {
+		g.Email = og.(types.Globetrotter).Email
+	}
+	if g.Password == "" {
+		g.Password = og.(types.Globetrotter).Password
+	}
+	log.Println("\nBEFORE og: ", og, "\n", "g: ", g)
+
+	return SwapInfo(g)
+}
+
+func SwapInfo(u types.User) (e error) {
+	//let's first create the backup user with the inverted user id
+	if e = db.InvertUserId(u.GetId()); e == nil {
+		e = db.CreateUser(u)
+	}
 	return
 }
