@@ -94,7 +94,8 @@ func UpdateAccountInfo(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	http.Redirect(w, r, "/myprofile/", 302)	
+	//let's make the user log back in in order to load the new info (must find a better way)
+	http.Redirect(w, r, "/logout/", 302)	
 }
 
 //carico in memoria il vecchio utente in modo da confrontare i campi
