@@ -66,3 +66,25 @@ func DeleteEventById(id int) (e error) {
 	//TODO: notify every interested user that this event was deleted 
 	return
 }
+
+
+//TODO: improve search query in order to filter the results
+func SearchEvent(query string) (E types.MiniEvento, e error) {
+	var Evento types.MiniEvento
+	var rows *sql.Rows
+
+	basicSQL := "select IdEvento, TitoloEvento, DescrizioneEvento from Eventi where (TitoloEvento like '%" + query + "%' or DescrizioneEvento like '%" + query + "%' or ItinerarioEvento like '%" + query +"%' or LuogoRitrovoEvento like '%" + query + "%')"
+	rows = database.query(basicSQL)
+
+	defer rows.Close()
+	for rows.Next() {
+		Evento = types.MiniEvento {}
+		err = rows.Scan(&Evento.IdEvento, &Evento.Titolo, &Evento.Descrizione)
+		if err != nil {
+			return E, e
+		}
+		E = append(E, Evento)
+	}
+	return E, nil
+
+}

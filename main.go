@@ -41,6 +41,7 @@ func main(){
 	http.HandleFunc("/go-cicerone/", views.RequiresLogin(views.GoCicerone))
 	http.HandleFunc("/myprofile/", views.RequiresLogin(views.DisplayPage))
 	http.HandleFunc("/book/", views.RequiresLogin(views.BookEvent))
+	http.HandleFunc("/search/", views.RequiresLogin(views.SearchEvent)
 
 	http.HandleFunc("/add-event/", views.RequiresCicerone(views.AddEvent))
 	http.HandleFunc("/delete/", views.RequiresCicerone(views.DeleteEventFunction))

@@ -20,9 +20,7 @@ var eventTemplate *template.Template
 var err error
 
 /*
-Page specific function have been deprecated
-in order to switch to this automated page executor.
-It must be used only if you have to load the context as well
+I'm going to deprecate this kinda generic DisplayPage function, in order to restore page specific functions
 */
 func DisplayPage(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
@@ -46,6 +44,27 @@ func DisplayPage(w http.ResponseWriter, r *http.Request) {
 			default:
 				homeTemplate.Execute(w, c)
 			}
+		}
+	}
+}
+
+func HomeFunction(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+
+		c.Utente = db.GetUserInfo(usr)
+
+		log.Println("Getting events")
+		if c.Events, e = db.GetEvents(); e != nil {
+			log.Println("Internal server error retriving context: " + e)
+			http.Redirect(	w, r, "/", http.StatusInternalServerError)
+		} else {
+			
+			c.CSRFToken = "abcd" //I need that to utilize cookies. must implement md5 token
+			expiration := time.Now().Add(365 * 24 * time.Hour)
+			cookie := http.Cookie{Name: "csrftoken", Value: "abcd", Expires: expiration}
+			http.SetCookie(w, &cookie)
+
+			homeTemplate.Execute(w, c)
 		}
 	}
 }

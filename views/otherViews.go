@@ -58,6 +58,8 @@ func loadContext(usr string, path []string) (c types.Context, e error) {
 		if e != nil {
 			return c, err
 		}
+	case "search":
+		
 	default:
 		log.Println("Getting events")
 		if c.Events, e = db.GetEvents(); e != nil {

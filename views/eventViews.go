@@ -84,6 +84,20 @@ func DeleteEventFunction(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func SearchEvent(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		http.Redirect(w, r, "/", http.StatusBadRequest)
+		return
+	}
+	r.ParseForm()
+
+	query := r.Form.Get("query")
+	log.Println("Search Query: " + query)
+
+	if 
+}
+
+//TODO: book event function
 func BookEvent(w http.ResponseWriter, r *http.Request) {
 
 }
