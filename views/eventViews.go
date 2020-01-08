@@ -17,33 +17,33 @@ import (
 )
 
 func AddEvent(w http.ResponseWriter, r *http.Request) {
-	var e types.Evento
+	var ev types.Evento
 	
 	if r.Method != "POST" {
 		http.Redirect(w, r, "/", http.StatusBadRequest)
 		return
 	} 
 	r.ParseForm()
-	e.Creatore = db.GetUserID(sessions.GetCurrentUser(r))
+	ev.Creatore = db.GetUserID(sessions.GetCurrentUser(r))
 
-	e.DataInizio = utils.DateToUnix(r.Form.Get("dataIni"))
-	e.DataFine = utils.DateToUnix(r.Form.Get("dataFine"))
+	ev.DataInizio = utils.DateToUnix(r.Form.Get("dataIni"))
+	ev.DataFine = utils.DateToUnix(r.Form.Get("dataFine"))
 	
-	e.Titolo = r.Form.Get("title")
-	e.Descrizione = r.Form.Get("desc")
+	ev.Titolo = r.Form.Get("title")
+	ev.Descrizione = r.Form.Get("desc")
 	
 	//TODO: we still not have any city management query/function
-	//e.Citta, _ = strconv.Atoi(r.Form.Get("city"))
+	//ev.Citta, _ = strconv.Atoi(r.Form.Get("city"))
 	
-	e.Itinerario = r.Form.Get("itiner")
-	e.MinPart, _ = strconv.Atoi(r.Form.Get("minP"))
-	e.MaxPart, _ = strconv.Atoi(r.Form.Get("maxP"))
-	e.Costo, _ = strconv.Atoi(r.Form.Get("cost"))
-	e.Indirizzo = r.Form.Get("meet") //must check
-	e.DataScadenzaPren = utils.DateToUnix(r.Form.Get("expDate"))
-	e.Categoria = r.Form.Get("category")	
-	err = db.CreateEvent(e)
-	if err != nil {
+	ev.Itinerario = r.Form.Get("itiner")
+	ev.MinPart, _ = strconv.Atoi(r.Form.Get("minP"))
+	ev.MaxPart, _ = strconv.Atoi(r.Form.Get("maxP"))
+	ev.Costo, _ = strconv.Atoi(r.Form.Get("cost"))
+	ev.Indirizzo = r.Form.Get("meet") //must check
+	ev.DataScadenzaPren = utils.DateToUnix(r.Form.Get("expDate"))
+	ev.Categoria = r.Form.Get("category")	
+	e = db.CreateEvent(ev)
+	if e != nil {
 		http.Error(w, "Unable to add Event", http.StatusInternalServerError)
 	} else {
 		http.Redirect(w, r, "/", 302)
@@ -83,22 +83,8 @@ func DeleteEventFunction(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 }
-/*
-func SearchEvent(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		http.Redirect(w, r, "/", http.StatusBadRequest)
-		return
-	}
-	r.ParseForm()
-
-	query := r.Form.Get("query")
-	log.Println("Search Query: " + query)
-
-	if 
-}
 
 //TODO: book event function
 func BookEvent(w http.ResponseWriter, r *http.Request) {
 
 }
-*/
