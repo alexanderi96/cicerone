@@ -119,7 +119,7 @@ func GetUserEmail(uid int) (email string) {
 	return
 }
 
-func GetUserInfo(email string) (u types.User){
+func GetUserInfo(email string) (u types.User, e error){
 	if IsCicerone(GetUserID(email)) {
 		user := types.Cicerone{}
 		userSQL := "select IdUtente, NomeUtente, CognomeUtente, SessoUtente, DataNascitaUtente, EmailUtente, CodiceFiscaleCicerone, TelefonoCicerone, IbanCicerone from Utenti join Ciceroni on Utenti.IdUtente = Ciceroni.IdCicerone where EmailUtente = ?"
@@ -127,12 +127,10 @@ func GetUserInfo(email string) (u types.User){
 		defer rows.Close() //must defer after every database interaction
 
 		if rows.Next() {
-			err := rows.Scan(&user.IdUtente, &user.Nome, &user.Cognome, &user.Sesso, &user.DataNascita, &user.Email, &user.CodFis, &user.Tel, &user.Iban)	
-			if err != nil {
-				log.Println(err)
-				return types.Cicerone{}
+			if e := rows.Scan(&user.IdUtente, &user.Nome, &user.Cognome, &user.Sesso, &user.DataNascita, &user.Email, &user.CodFis, &user.Tel, &user.Iban); e != nil {
+				return nil, e
 			}
-			return user
+			return user, nil
 		}
 
 	} else {
@@ -142,13 +140,11 @@ func GetUserInfo(email string) (u types.User){
 		defer rows.Close() //must defer after every database interaction
 
 		if rows.Next() {
-			err := rows.Scan(&user.IdUtente, &user.Nome, &user.Cognome, &user.Sesso, &user.DataNascita, &user.Email)	
-			if err != nil {
-				log.Println(err)
-				return types.Globetrotter{}
+			if e := rows.Scan(&user.IdUtente, &user.Nome, &user.Cognome, &user.Sesso, &user.DataNascita, &user.Email); e != nil {
+				return nil, e
 			}
 		}
-		return user
+		return user, nil
 	}
 	return
 }

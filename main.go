@@ -37,12 +37,13 @@ func main(){
 	http.HandleFunc("/delete-user/", views.RequiresLogin(views.DeleteMyAccount))
 	http.HandleFunc("/update-user/", views.RequiresLogin(views.UpdateAccountInfo))
 
-	http.HandleFunc("/", views.RequiresLogin(views.DisplayPage)) // User must be logged in to access the homepage. If he isn't he will recieve a page with the project description and the possibility to login or register
+	http.HandleFunc("/", views.RequiresLogin(views.HomeFunction)) // User must be logged in to access the homepage. If he isn't he will recieve a page with the project description and the possibility to login or register
 	http.HandleFunc("/go-cicerone/", views.RequiresLogin(views.GoCicerone))
-	http.HandleFunc("/myprofile/", views.RequiresLogin(views.DisplayPage))
-	http.HandleFunc("/book/", views.RequiresLogin(views.BookEvent))
-	http.HandleFunc("/search/", views.RequiresLogin(views.SearchEvent)
-
+	http.HandleFunc("/myprofile/", views.RequiresLogin(views.MyProfile))
+	
+	http.HandleFunc("/event/", views.RequiresLogin(views.ShowEvent))
+	//http.HandleFunc("/book/", views.RequiresLogin(views.BookEvent))
+	//http.HandleFunc("/search/", views.RequiresLogin(views.SearchEvent))
 	http.HandleFunc("/add-event/", views.RequiresCicerone(views.AddEvent))
 	http.HandleFunc("/delete/", views.RequiresCicerone(views.DeleteEventFunction))
 

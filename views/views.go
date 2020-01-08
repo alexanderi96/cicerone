@@ -8,7 +8,14 @@ import (
 	"net/http"
 	"time"
 	"strings"
+	"strconv"
 	"github.com/alexanderi96/cicerone/sessions"
+	"github.com/alexanderi96/cicerone/db"
+	"github.com/alexanderi96/cicerone/types"
+)
+
+const (
+	token = "abcd"
 )
 
 var templates *template.Template
@@ -19,52 +26,71 @@ var eventTemplate *template.Template
 
 var err error
 
-/*
-I'm going to deprecate this kinda generic DisplayPage function, in order to restore page specific functions
-*/
-func DisplayPage(w http.ResponseWriter, r *http.Request) {
+func HomeFunction(w http.ResponseWriter, r *http.Request) {
+	var c types.Context
+	var e error
 	if r.Method == "GET" {
-		path :=  strings.Split(r.URL.Path, "/")
-		usr := sessions.GetCurrentUser(r)
-		c, err := loadContext(usr, path)
-		if err != nil {
+
+		c.Utente, e = db.GetUserInfo(sessions.GetCurrentUser(r))
+		c.Events, e = db.GetEvents()
+		
+		if e != nil   {
 			log.Println("Internal server error retriving context")
 			http.Redirect(	w, r, "/", http.StatusInternalServerError)
 		} else {
-			c.CSRFToken = "abcd" //I need that to utilize cookies. must implement md5 token
+			c.CSRFToken = token 
 			expiration := time.Now().Add(365 * 24 * time.Hour)
-			cookie := http.Cookie{Name: "csrftoken", Value: "abcd", Expires: expiration}
+			cookie := http.Cookie{Name: "csrftoken", Value: token, Expires: expiration}
 			http.SetCookie(w, &cookie)
-			
-			switch path[1]{
-			case "myprofile":
-				profileTemplate.Execute(w, c)
-			case "event":
-				eventTemplate.Execute(w, c)
-			default:
-				homeTemplate.Execute(w, c)
-			}
+
+			homeTemplate.Execute(w, c)
 		}
 	}
 }
 
-func HomeFunction(w http.ResponseWriter, r *http.Request) {
+func MyProfile(w http.ResponseWriter, r *http.Request) {
+	var c types.Context
+	var e error
+	
 	if r.Method == "GET" {
 
-		c.Utente = db.GetUserInfo(usr)
-
-		log.Println("Getting events")
-		if c.Events, e = db.GetEvents(); e != nil {
-			log.Println("Internal server error retriving context: " + e)
+		if c.Utente, e = db.GetUserInfo(sessions.GetCurrentUser(r)); e != nil {
+			log.Println("Internal server error retriving user info")
 			http.Redirect(	w, r, "/", http.StatusInternalServerError)
 		} else {
-			
-			c.CSRFToken = "abcd" //I need that to utilize cookies. must implement md5 token
+			c.CSRFToken = token 
 			expiration := time.Now().Add(365 * 24 * time.Hour)
-			cookie := http.Cookie{Name: "csrftoken", Value: "abcd", Expires: expiration}
+			cookie := http.Cookie{Name: "csrftoken", Value: token, Expires: expiration}
 			http.SetCookie(w, &cookie)
 
-			homeTemplate.Execute(w, c)
+			profileTemplate.Execute(w, c)
+		}
+	}
+}
+
+func ShowEvent(w http.ResponseWriter, r *http.Request) {
+	var c types.Context
+	var e error
+	
+	if r.Method == "GET" {
+
+		c.Utente, e = db.GetUserInfo(sessions.GetCurrentUser(r))
+		
+		path :=  strings.Split(r.URL.Path, "/")
+		log.Println(path)
+		EId, _ := strconv.Atoi(path[2])
+		
+
+		if c.Event, e = db.GetEventById(EId); e != nil {
+			log.Println("Internal server error retriving event info")
+			http.Redirect(	w, r, "/", http.StatusInternalServerError)
+		} else {
+			c.CSRFToken = token 
+			expiration := time.Now().Add(365 * 24 * time.Hour)
+			cookie := http.Cookie{Name: "csrftoken", Value: token, Expires: expiration}
+			http.SetCookie(w, &cookie)
+
+			eventTemplate.Execute(w, c)
 		}
 	}
 }

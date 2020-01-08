@@ -69,7 +69,7 @@ func DeleteEventById(id int) (e error) {
 
 
 //TODO: improve search query in order to filter the results
-func SearchEvent(query string) (E types.MiniEvento, e error) {
+func SearchEvent(query string) (E []types.MiniEvento, e error) {
 	var Evento types.MiniEvento
 	var rows *sql.Rows
 

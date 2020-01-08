@@ -140,7 +140,7 @@ func parseGlobe(r *http.Request) (g types.Globetrotter) {
 
 func updateCice(r *http.Request) (e error) {
 	c := parseCice(r)
-	oc := db.GetUserInfo(sessions.GetCurrentUser(r))
+	oc, _ := db.GetUserInfo(sessions.GetCurrentUser(r))
 
 	//in order to use the interface without problems wee need to use the "type assertion"
 	if c.Nome == "" {
@@ -181,7 +181,7 @@ func updateGlobe(r *http.Request) (e error){
 
 	g := parseGlobe(r)
 
-	og := db.GetUserInfo(sessions.GetCurrentUser(r))
+	og, _ := db.GetUserInfo(sessions.GetCurrentUser(r))
 
 	
 	

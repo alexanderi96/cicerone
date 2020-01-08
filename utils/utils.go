@@ -9,6 +9,7 @@ import (
 const (
 	layout = "2006-01-02"
 )
+
 func GetRedirectUrl(referer string) string {
 	var redirectUrl string
 	url := strings.Split(referer, "/")

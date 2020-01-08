@@ -83,7 +83,7 @@ func DeleteEventFunction(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 }
-
+/*
 func SearchEvent(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		http.Redirect(w, r, "/", http.StatusBadRequest)
@@ -101,3 +101,4 @@ func SearchEvent(w http.ResponseWriter, r *http.Request) {
 func BookEvent(w http.ResponseWriter, r *http.Request) {
 
 }
+*/

@@ -5,11 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"strconv"
 	"strings"
-
-	"github.com/alexanderi96/cicerone/db"
-	"github.com/alexanderi96/cicerone/types"
 )
 
 //PopulateTemplates is used to parse all templates present in
@@ -42,30 +38,4 @@ func PopulateTemplates() {
 	loginTemplate = templates.Lookup("login.html")
 	profileTemplate = templates.Lookup("userprofile.html")
 	eventTemplate = templates.Lookup("event.html")
-}
-
-func loadContext(usr string, path []string) (c types.Context, e error) {	
-	
-	c.Utente = db.GetUserInfo(usr)
-
-	switch path[1] {
-	case "myprofile":
-		return
-	case "event":
-		//in this case we want to get the information about a single event
-		EId, _ := strconv.Atoi(path[2])
-		c.Event, e = db.GetEventById(EId)
-		if e != nil {
-			return c, err
-		}
-	case "search":
-		
-	default:
-		log.Println("Getting events")
-		if c.Events, e = db.GetEvents(); e != nil {
-			return c, e
-		}
-	}
-	
-	return	
 }
