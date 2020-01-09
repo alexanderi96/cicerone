@@ -26,8 +26,8 @@ func SignUpFunc(w http.ResponseWriter, r *http.Request) {
 		u = parseCice(r)
 	}
 	
-	err := db.CreateUser(u)
-	if err != nil {
+	e = db.CreateUser(u)
+	if e != nil {
 		http.Error(w, "Unable to sign user up", http.StatusInternalServerError)
 	} else {
 		http.Redirect(w, r, "/login/", 302)
@@ -48,8 +48,8 @@ func GoCicerone(w http.ResponseWriter, r *http.Request) {
 
 	uid := db.GetUserID(sessions.GetCurrentUser(r))
 
-	err := db.AddCicerone(uid, tel, iban, fcode)
-	if err != nil {
+	e = db.AddCicerone(uid, tel, iban, fcode)
+	if e != nil {
 		http.Error(w, "Unable to register as Cicerone", http.StatusInternalServerError)
 	} else {
 		http.Redirect(w, r, "/", 302)
@@ -66,7 +66,6 @@ func DeleteMyAccount(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
 	if e := db.DeleteSelectedUser(r.Form.Get("email"), r.Form.Get("password")); e != nil {
-		log.Println(e)
 		//TODO: handle better this behaviour
 		http.Redirect(w, r, "/myprofile/", http.StatusUnauthorized)
 	} else {
@@ -83,15 +82,13 @@ func UpdateAccountInfo(w http.ResponseWriter, r *http.Request) {
 	
 	uid := db.GetUserID(sessions.GetCurrentUser(r))
 	if db.IsCicerone(uid) {
-		if e := updateCice(r); e != nil {
+		if e = updateCice(r); e != nil {
 			log.Println("(uid: ", uid, ") error updating user information, keeping old details\nError: ", e)
 			http.Redirect(w, r, "/myprofile/", http.StatusInternalServerError)
 		}
-	} else {
-		if e := updateGlobe(r); e != nil {
-			log.Println("(uid: ", uid, ") error updating user information, keeping old details\nError: ", e)
-			http.Redirect(w, r, "/myprofile/", http.StatusInternalServerError)
-		}
+	} else if e = updateGlobe(r); e != nil {
+		log.Println("(uid: ", uid, ") error updating user information, keeping old details\nError: ", e)
+		http.Redirect(w, r, "/myprofile/", http.StatusInternalServerError)
 	}
 
 	//let's make the user log back in in order to load the new info (must find a better way)
@@ -143,6 +140,7 @@ func updateCice(r *http.Request) (e error) {
 	oc, _ := db.GetUserInfo(sessions.GetCurrentUser(r))
 
 	//in order to use the interface without problems wee need to use the "type assertion"
+	c.IdUtente = oc.(types.Cicerone).IdUtente
 	if c.Nome == "" {
 		c.Nome = oc.(types.Cicerone).Nome
 	}

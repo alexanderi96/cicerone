@@ -33,6 +33,7 @@ func HomeFunction(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 
 		c.Utente, e = db.GetUserInfo(sessions.GetCurrentUser(r))
+		log.Println(e)
 		c.Events, e = db.GetEvents()
 
 		if e != nil   {

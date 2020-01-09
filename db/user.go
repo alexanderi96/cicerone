@@ -127,9 +127,11 @@ func GetUserInfo(email string) (u types.User, e error){
 		defer rows.Close() //must defer after every database interaction
 
 		if rows.Next() {
-			if e := rows.Scan(&user.IdUtente, &user.Nome, &user.Cognome, &user.Sesso, &user.DataNascita, &user.Email, &user.CodFis, &user.Tel, &user.Iban); e != nil {
+			log.Println(rows)
+			if e := rows.Scan(&user.IdUtente, &user.Nome, &user.Cognome, &user.Sesso, &user.DataNascita, &user.Email, &user.Tel, &user.Iban, &user.CodFis); e != nil {
 				return nil, e
 			}
+
 			return user, nil
 		}
 
@@ -177,7 +179,7 @@ func DeleteSelectedUser(email, password string) (e error) {
 	if ValidUser(email, password) {
 		uid := GetUserID(email)
 		if IsCicerone(uid) {
-			ciceSQL := "delete from Ciceroni where IdUtente = ?"
+			ciceSQL := "delete from Ciceroni where IdCicerone = ?"
 			if e = gQuery(ciceSQL, uid); e != nil {
 				return
 			}
@@ -192,7 +194,7 @@ func DeleteSelectedUser(email, password string) (e error) {
 
 func DeleteUserById(uid int) (e error) {
 	if IsCicerone(uid) {
-		ciceSQL := "delete from Ciceroni where IdUtente = ?"
+		ciceSQL := "delete from Ciceroni where IdCicerone = ?"
 		if e = gQuery(ciceSQL, uid); e != nil {
 			return
 		}
