@@ -1,8 +1,8 @@
 {{template "_navbar.html" .}}
 
-<div class="d-flex flwx-wrap row mx-3 my-3 justify-content-around align-itemborder border-danger">
+<div class="d-flex flwx-wrap row mx-3 my-3 justify-content-around align-itemborder">
   {{ if eq (len .Events) 0 }}
-    <div class="px-2 py-2 border border-primary justify-content-center">
+    <div class="px-2 py-2 justify-content-center">
       <div class="card">
         <div class="card-header">
            Oh ho!
@@ -23,7 +23,7 @@
   </div>
   {{else}}
    {{range $key, $value := .Events}}
-    <div class="px-2 py-2 border border-primary">
+    <div class="px-2 py-2">
       <div class="card" style="width: 18rem;">
         <img src="https://w.wallhaven.cc/full/49/wallhaven-49r1w1.jpg" class="card-img-top" alt="...">
         <div class="card-body">
