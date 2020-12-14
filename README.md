@@ -9,17 +9,22 @@ Or if you just want to use the app and partecipate to something interesting regi
 
 # How To Use?
 
-Manually:
+1. Clone the repo
+`git clone github.com/alexanderi96/cicerone`
    
-    git clone github.com/alexanderi96/cicerone
-   Change dir to the respective folder and create the db file:
-    cat schema.sql | sqlite3 cicerone.db
-   Run go build
-    ./cicerone
-   Remember to set the environment variable for the session cookie store:
-   Under windows: 
-    $Env:CICERONE_SESSION_KEY="your super secret key"
-    
-   Open localhost:8081
+2. Create the db file:
+`cat schema.sql | sqlite3 cicerone.db`
+
+3. Build the source
+`go build`
+   
+4. Remember to set the environment variable for the session cookie store:
+   	Under windows: 
+`$Env:CICERONE_SESSION_KEY="your super secret key"`
+
+4. Run
+`./cicerone`
+
+Open localhost:8081 and try it
 
 You can change the port in the config file
